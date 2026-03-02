@@ -1,0 +1,24 @@
+{
+  "name": "@ems-fullstack/types",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "devDependencies": {
+    "@ems-fullstack/typescript-config": "workspace:*",
+    "typescript": "latest"
+  },
+  "dependencies": {
+    "yup": "^1.7.1"
+  },
+  "peerDependencies": {
+    "@nestjs/swagger": "^6.0.0"
+  }
+}
