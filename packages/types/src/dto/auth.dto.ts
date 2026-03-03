@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const createUserShema = yup.object({
+export const registerUserShema = yup.object({
   name: yup
     .string()
     .trim()
@@ -34,4 +34,15 @@ export const createUserShema = yup.object({
     .matches(/(?=.*\d)/, "Password must contain at least one number")
 });
 
-export type CreateUserDto = yup.InferType<typeof createUserShema>;
+export const loginUserSchema = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .required("Email is required")
+    .email("Email is not valid"),
+
+  password: yup.string().trim().required("Password is required")
+});
+
+export type LoginUserDTO = yup.InferType<typeof loginUserSchema>;
+export type RegisterUserDto = yup.InferType<typeof registerUserShema>;

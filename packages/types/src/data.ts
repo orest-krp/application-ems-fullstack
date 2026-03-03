@@ -1,5 +1,3 @@
-import { ApiProperty } from "@nestjs/swagger";
-
 export interface User {
   id: string;
   name: string;
@@ -10,6 +8,12 @@ export interface User {
 export interface AuthUser {
   id: string;
   email: string;
+}
+
+export interface FetchError {
+  statusCode: number;
+  error: string;
+  message: string[] | string;
 }
 
 export interface AuthReq {

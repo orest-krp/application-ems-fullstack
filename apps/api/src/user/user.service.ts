@@ -6,12 +6,12 @@ import {
 
 import argon2 from 'argon2';
 import { PrismaService } from 'src/prisma.service';
-import { CreateUserDto, User } from '@ems-fullstack/types';
+import { RegisterUserDto, User } from '@ems-fullstack/types';
 
 @Injectable()
 export class UserService {
   constructor(private prismaService: PrismaService) {}
-  async create(user: CreateUserDto): Promise<User> {
+  async create(user: RegisterUserDto): Promise<User> {
     const isUserExist = Boolean(await this.findByEmail(user.email));
 
     if (isUserExist) {

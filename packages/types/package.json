@@ -17,8 +17,5 @@
   },
   "dependencies": {
     "yup": "^1.7.1"
-  },
-  "peerDependencies": {
-    "@nestjs/swagger": "^6.0.0"
   }
 }

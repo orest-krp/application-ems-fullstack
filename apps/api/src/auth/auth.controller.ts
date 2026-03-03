@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiCookieAuth } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -6,11 +14,12 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth.quard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { setTokens } from 'src/utils/helpers';
-import { Validator } from 'src/utils/validation.pipe';
+import { YupValidationPipe } from 'src/utils/validation.pipe';
 import {
   type AuthReq,
-  type CreateUserDto,
-  createUserShema,
+  registerUserShema,
+  loginUserSchema,
+  type RegisterUserDto,
 } from '@ems-fullstack/types';
 
 @ApiTags('Authentication')
@@ -19,12 +28,14 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @ApiOperation({ summary: 'Register a new user' })
+  @UsePipes(new YupValidationPipe(registerUserShema))
   @Post('register')
-  async register(@Body(new Validator(createUserShema)) user: CreateUserDto) {
+  async register(@Body() user: RegisterUserDto) {
     return this.authService.register(user);
   }
 
   @ApiOperation({ summary: 'User login' })
+  @UsePipes(new YupValidationPipe(loginUserSchema))
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req: AuthReq, @Res({ passthrough: true }) res: Response) {

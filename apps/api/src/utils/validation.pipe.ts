@@ -1,44 +1,45 @@
+import { FetchError } from '@ems-fullstack/types';
 import {
+  PipeTransform,
+  Injectable,
   HttpException,
   HttpStatus,
-  Injectable,
-  PipeTransform,
 } from '@nestjs/common';
 import { Schema, ValidationError } from 'yup';
 
 @Injectable()
-export class Validator<T> implements PipeTransform {
+export class YupValidationPipe<T> implements PipeTransform {
   constructor(private schema: Schema<T>) {}
 
-  transform(value: unknown): T {
+  async transform(value: unknown): Promise<T> {
     try {
-      return this.schema.validateSync(value, { abortEarly: false });
+      return await this.schema.validate(value, { abortEarly: false });
     } catch (error) {
       if (error instanceof ValidationError) {
         const errors: Record<string, string[]> = error.inner.reduce(
           (acc, err) => {
-            const path = err.path || 'unknown';
+            const path = err.path || 'body';
             acc[path] = acc[path] ? [...acc[path], err.message] : [err.message];
             return acc;
           },
           {} as Record<string, string[]>,
         );
 
-        throw new HttpException(
-          {
-            message: 'Validation failed',
-            errors,
-          },
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
+        const fetchError: FetchError = {
+          statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+          error: 'Unprocessable Entity',
+          message: Object.values(errors).flat(),
+        };
+        throw new HttpException(fetchError, HttpStatus.UNPROCESSABLE_ENTITY);
       }
 
-      throw new HttpException(
-        {
-          message: 'Something went wrong',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      const fetchError: FetchError = {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: 'Internal Server Error',
+        message: 'Something went wrong',
+      };
+
+      throw new HttpException(fetchError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
