@@ -28,7 +28,7 @@ model Event {
   location     String
   capacity     Int?
   visibility   EventVisibility @default(PUBLIC)
-  status       EventStatus     @default(ONGOING)
+  status       EventStatus     @default(UPCOMING)
   organizerId  String
   organizer    User            @relation("OrganizerEvents", fields: [organizerId], references: [id])
   participants Participant[]

@@ -28,7 +28,7 @@ export class YupValidationPipe<T> implements PipeTransform {
         const fetchError: FetchError = {
           statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
           error: 'Unprocessable Entity',
-          message: Object.values(errors).flat(),
+          messages: Object.values(errors).flat(),
         };
         throw new HttpException(fetchError, HttpStatus.UNPROCESSABLE_ENTITY);
       }
@@ -36,7 +36,7 @@ export class YupValidationPipe<T> implements PipeTransform {
       const fetchError: FetchError = {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         error: 'Internal Server Error',
-        message: 'Something went wrong',
+        messages: ['Something went wrong'],
       };
 
       throw new HttpException(fetchError, HttpStatus.INTERNAL_SERVER_ERROR);

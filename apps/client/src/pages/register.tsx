@@ -14,8 +14,8 @@ import { useRegister } from "@/hooks/use-register";
 import { registerUserShema, type RegisterUserDto } from "@ems-fullstack/types";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
 import { FormInput } from "@/components/ui/auth-form-input";
-import ErrorMessage from "@/components/ui/error-message";
 import { toast } from "sonner";
+import { ErrorMessage } from "@/components/ui/error-message";
 
 export function Register() {
   const { register: registerUser, error, setError } = useRegister();
@@ -28,14 +28,13 @@ export function Register() {
 
   const onSubmit = async (data: RegisterUserDto) => {
     setError(null);
-    registerUser(data.name, data.email, data.password).then(() => {
-      navigate("/login");
-      toast.success("User has been registered!");
-    });
+    await registerUser(data.name, data.email, data.password);
+    await navigate("/login");
+    toast.success("User has been registered!");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen bg-primary-foreground">
       <Card className="max-w-md w-full">
         <CardHeader>
           <CardTitle>Register</CardTitle>
@@ -51,7 +50,7 @@ export function Register() {
                 autoComplete="new-password"
                 placeholder="Your user name"
                 type="text"
-                icon={<User className="w-4 h-4 text-secondary-text" />}
+                icon={<User className="w-4 h-4 text-muted-foreground" />}
               />
               <FormInput
                 name="email"
@@ -60,7 +59,7 @@ export function Register() {
                 autoComplete="new-password"
                 placeholder="you@example.com"
                 type="email"
-                icon={<Mail className="w-4 h-4 text-secondary-text" />}
+                icon={<Mail className="w-4 h-4 text-muted-foreground" />}
               />
               <FormInput
                 name="password"
@@ -69,7 +68,7 @@ export function Register() {
                 autoComplete="new-password"
                 placeholder="********"
                 type="password"
-                icon={<Lock className="w-4 h-4 text-secondary-text" />}
+                icon={<Lock className="w-4 h-4 text-muted-foreground" />}
                 isPassword
               />
               <Button type="submit" className="w-full mt-2">

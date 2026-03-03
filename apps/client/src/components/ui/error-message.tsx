@@ -1,16 +1,13 @@
 import type { FetchError } from "@ems-fullstack/types";
-import React from "react";
 
 interface ErrorMessageProps {
   error: FetchError | null;
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {
+export function ErrorMessage({ error }: ErrorMessageProps) {
   if (!error) return null;
 
-  const messages = Array.isArray(error.message)
-    ? error.message
-    : [error.message];
+  const messages = error.messages;
 
   return (
     <ul className="mt-2 text-destructive text-sm text-center">
@@ -19,6 +16,4 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {
       ))}
     </ul>
   );
-};
-
-export default ErrorMessage;
+}

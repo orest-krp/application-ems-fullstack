@@ -6,11 +6,13 @@ import base from './config.ts/base';
 import { PrismaService } from './prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
+    EventModule,
     ConfigModule.forRoot({
       load: [base],
       validationSchema: envValidationSchema,

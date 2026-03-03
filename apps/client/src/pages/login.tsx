@@ -13,8 +13,8 @@ import { useLogin } from "@/hooks/use-login";
 import { loginUserSchema, type LoginUserDTO } from "@ems-fullstack/types";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
 import { FormInput } from "@/components/ui/auth-form-input";
-import ErrorMessage from "@/components/ui/error-message";
 import { toast } from "sonner";
+import { ErrorMessage } from "@/components/ui/error-message";
 
 export function Login() {
   const { login, error, setError } = useLogin();
@@ -26,10 +26,9 @@ export function Login() {
 
   const onSubmit = async (data: LoginUserDTO) => {
     setError(null);
-    login(data.email, data.password).then(() => {
-      navigate("/events");
-      toast.success("User has been authorized!");
-    });
+    await login(data.email, data.password);
+    await navigate("/events");
+    toast.success("User has been authorized!");
   };
 
   return (
@@ -52,7 +51,7 @@ export function Login() {
                 control={control}
                 placeholder="you@example.com"
                 type="email"
-                icon={<Mail className="w-4 h-4 text-secondary-text" />}
+                icon={<Mail className="w-4 h-4 text-muted-foreground" />}
               />
               <FormInput
                 name="password"
@@ -60,16 +59,14 @@ export function Login() {
                 control={control}
                 placeholder="********"
                 type="password"
-                icon={<Lock className="w-4 h-4 text-secondary-text" />}
+                icon={<Lock className="w-4 h-4 text-muted-foreground" />}
                 isPassword
               />
               <Button type="submit" className="w-full mt-2">
                 Login
               </Button>
             </div>
-
             <ErrorMessage error={error} />
-
             <div className="mt-4 text-center">
               <Link to="/register" className="text-sm hover:underline">
                 Don't have an account? Register

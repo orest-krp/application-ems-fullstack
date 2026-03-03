@@ -18,7 +18,6 @@ import { YupValidationPipe } from 'src/utils/validation.pipe';
 import {
   type AuthReq,
   registerUserShema,
-  loginUserSchema,
   type RegisterUserDto,
 } from '@ems-fullstack/types';
 
@@ -35,7 +34,6 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'User login' })
-  @UsePipes(new YupValidationPipe(loginUserSchema))
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req: AuthReq, @Res({ passthrough: true }) res: Response) {

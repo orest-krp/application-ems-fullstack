@@ -16,6 +16,7 @@
     "typescript": "latest"
   },
   "dependencies": {
+    "dayjs": "^1.11.19",
     "yup": "^1.7.1"
   }
 }

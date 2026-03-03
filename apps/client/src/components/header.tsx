@@ -1,0 +1,204 @@
+import { useEffect, useState } from "react";
+import {
+  Calendar,
+  LogIn,
+  LogOut,
+  Menu,
+  Plus,
+  SquareChartGantt,
+  User as UserIcon,
+  UserRoundPlus
+} from "lucide-react";
+import { Button } from "./ui/button";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useUser } from "@/hooks/use-user";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "./ui/dropdown-menu";
+
+export function Header() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { logout, user } = useUser();
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMobileOpen(false);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setMobileOpen]);
+
+  const activeTab = location.pathname === "/my-events" ? "my-events" : "events";
+
+  const handleTabChange = (value: string) => {
+    setMobileOpen(false);
+    if (value === "events") {
+      navigate("/events");
+    } else {
+      navigate("/my-events");
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success("User logged out!");
+    setMobileOpen(false);
+  };
+
+  return (
+    <header className="border-b bg-background">
+      <div className="container mx-auto flex px-4 md:px-0 items-center justify-between py-4">
+        <h1
+          onClick={() => navigate("/events")}
+          className="text-2xl font-bold cursor-pointer"
+        >
+          EMS
+        </h1>
+
+        <div className="hidden md:flex items-center gap-6">
+          <Tabs value={activeTab} onValueChange={handleTabChange}>
+            <TabsList className="bg-transparent p-0 gap-4">
+              <TabsTrigger value="events">
+                <SquareChartGantt className="w-4 h-4 mr-1" />
+                Events
+              </TabsTrigger>
+              <TabsTrigger value="my-events">
+                <Calendar className="w-4 h-4 mr-1" />
+                My Events
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {user ? (
+            <div className="flex items-center gap-4">
+              <Button
+                onClick={() => navigate("/create-event")}
+                className="flex gap-1"
+              >
+                <Plus />
+                Create Event
+              </Button>
+
+              <div className="flex items-center gap-2">
+                <Avatar className="w-9 h-9">
+                  <AvatarFallback>
+                    <UserIcon className="w-5" />
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium">{user?.name}</span>
+                <Button onClick={handleLogout} variant="ghost">
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                <LogIn className="mr-1" />
+                Login
+              </Button>
+              <Button onClick={() => navigate("/register")}>
+                <UserRoundPlus className="mr-1" />
+                Sign Up
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <div className="md:hidden">
+          <DropdownMenu
+            open={mobileOpen}
+            onOpenChange={() => setMobileOpen(!mobileOpen)}
+          >
+            <DropdownMenuTrigger
+              onClick={() => {
+                setMobileOpen(true);
+              }}
+              asChild
+            >
+              <Button variant="link" size="icon-lg">
+                <Menu className="size-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-76">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  className="p-3"
+                  onClick={() => navigate("/events")}
+                >
+                  <SquareChartGantt className="mr-2" />
+                  Events
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="p-3"
+                  onClick={() => navigate("/my-events")}
+                >
+                  <Calendar className="mr-2" />
+                  My Events
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              {user ? (
+                <>
+                  <DropdownMenuItem
+                    className="p-3"
+                    onClick={() => navigate("/create-event")}
+                  >
+                    <Plus className="mr-2" />
+                    Create Event
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem className="p-3" disabled>
+                    <UserIcon className="mr-2" />
+                    {user?.name}
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    className="p-3"
+                    onClick={async () => {
+                      await logout();
+                      toast.success("User logged out!");
+                    }}
+                  >
+                    <LogOut className="mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem onClick={() => navigate("/login")}>
+                    <LogIn className="mr-2" />
+                    Login
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem onClick={() => navigate("/register")}>
+                    <UserRoundPlus className="mr-2" />
+                    Sign Up
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+    </header>
+  );
+}

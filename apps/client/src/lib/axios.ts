@@ -31,7 +31,6 @@ authApi.interceptors.response.use(
 
         return authApi(originalRequest);
       } catch (refreshError) {
-        toast.error("User authorization has been expired!");
         return Promise.reject(refreshError);
       }
     }
