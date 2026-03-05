@@ -1,5 +1,6 @@
-import { CreateEventDto } from '@ems-fullstack/types';
+import { CreateEventDto } from '@ems-fullstack/utils';
 import { Injectable } from '@nestjs/common';
+import { EventVisibility } from 'generated/prisma/enums';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -11,7 +12,9 @@ export class EventService {
     });
   }
 
-  async getAll() {
-    return await this.prismaService.event.findMany();
+  async getAllPublic() {
+    return await this.prismaService.event.findMany({
+      where: { visibility: EventVisibility.PUBLIC },
+    });
   }
 }

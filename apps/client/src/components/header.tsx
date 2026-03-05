@@ -10,9 +10,8 @@ import {
   UserRoundPlus
 } from "lucide-react";
 import { Button } from "./ui/button";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { useUser } from "@/hooks/use-user";
 import { toast } from "sonner";
 import {
@@ -23,10 +22,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "./ui/dropdown-menu";
+import clsx from "clsx";
 
 export function Header() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { logout, user } = useUser();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -41,17 +40,6 @@ export function Header() {
 
     return () => window.removeEventListener("resize", handleResize);
   }, [setMobileOpen]);
-
-  const activeTab = location.pathname === "/my-events" ? "my-events" : "events";
-
-  const handleTabChange = (value: string) => {
-    setMobileOpen(false);
-    if (value === "events") {
-      navigate("/events");
-    } else {
-      navigate("/my-events");
-    }
-  };
 
   const handleLogout = async () => {
     await logout();
@@ -70,18 +58,34 @@ export function Header() {
         </h1>
 
         <div className="hidden md:flex items-center gap-6">
-          <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <TabsList className="bg-transparent p-0 gap-4">
-              <TabsTrigger value="events">
-                <SquareChartGantt className="w-4 h-4 mr-1" />
-                Events
-              </TabsTrigger>
-              <TabsTrigger value="my-events">
-                <Calendar className="w-4 h-4 mr-1" />
-                My Events
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <NavLink
+            to="/events"
+            end
+            className={({ isActive }) =>
+              clsx(
+                "flex items-center hover:text-primary",
+                !isActive && "text-muted-foreground"
+              )
+            }
+          >
+            <SquareChartGantt className="h-4 w-4 mr-2" />
+            Events
+          </NavLink>
+          {user && (
+            <NavLink
+              to="/my-events"
+              end
+              className={({ isActive }) =>
+                clsx(
+                  "flex items-center hover:text-primary",
+                  !isActive && "text-muted-foreground"
+                )
+              }
+            >
+              <Calendar className="h-4 w-4 mr-2" />
+              My Events
+            </NavLink>
+          )}
 
           {user ? (
             <div className="flex items-center gap-4">
@@ -108,17 +112,16 @@ export function Header() {
           ) : (
             <div className="flex items-center gap-4">
               <Button variant="outline" onClick={() => navigate("/login")}>
-                <LogIn className="mr-1" />
+                <LogIn />
                 Login
               </Button>
               <Button onClick={() => navigate("/register")}>
-                <UserRoundPlus className="mr-1" />
+                <UserRoundPlus />
                 Sign Up
               </Button>
             </div>
           )}
         </div>
-
         <div className="md:hidden">
           <DropdownMenu
             open={mobileOpen}
@@ -143,13 +146,15 @@ export function Header() {
                   <SquareChartGantt className="mr-2" />
                   Events
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="p-3"
-                  onClick={() => navigate("/my-events")}
-                >
-                  <Calendar className="mr-2" />
-                  My Events
-                </DropdownMenuItem>
+                {user && (
+                  <DropdownMenuItem
+                    className="p-3"
+                    onClick={() => navigate("/my-events")}
+                  >
+                    <Calendar className="mr-2" />
+                    My Events
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
 
               <DropdownMenuSeparator />

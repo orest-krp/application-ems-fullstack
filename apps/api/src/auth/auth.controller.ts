@@ -14,12 +14,15 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth.quard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { setTokens } from 'src/utils/helpers';
-import { YupValidationPipe } from 'src/utils/validation.pipe';
+import { YupValidationPipe } from 'src/validation.pipe';
 import {
   type AuthReq,
   registerUserShema,
   type RegisterUserDto,
-} from '@ems-fullstack/types';
+  UserResponseDTO,
+  TokensResponseDto,
+  type LogOutResponseDto,
+} from '@ems-fullstack/utils';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -29,14 +32,17 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a new user' })
   @UsePipes(new YupValidationPipe(registerUserShema))
   @Post('register')
-  async register(@Body() user: RegisterUserDto) {
-    return this.authService.register(user);
+  async register(@Body() user: RegisterUserDto): Promise<UserResponseDTO> {
+    return await this.authService.register(user);
   }
 
   @ApiOperation({ summary: 'User login' })
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req: AuthReq, @Res({ passthrough: true }) res: Response) {
+  async login(
+    @Req() req: AuthReq,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<TokensResponseDto> {
     const tokens = await this.authService.generateTokens(
       req.user.id,
       req.user.email,
@@ -49,7 +55,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout user' })
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  logout(@Res({ passthrough: true }) res: Response) {
+  logout(@Res({ passthrough: true }) res: Response): LogOutResponseDto {
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     return { message: 'Logged out successfully' };
@@ -62,7 +68,7 @@ export class AuthController {
   async refresh(
     @Req() req: AuthReq,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<TokensResponseDto> {
     const tokens = await this.authService.generateTokens(
       req.user.id,
       req.user.email,

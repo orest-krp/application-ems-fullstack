@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { fetcher } from "@/lib/fetcher";
-import type { FetchError } from "@ems-fullstack/types";
+import type { FetchError } from "@ems-fullstack/utils";
 
 export function useLogin() {
   const [loading, setLoading] = useState(false);

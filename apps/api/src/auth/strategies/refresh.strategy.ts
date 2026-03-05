@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
 import { Request } from 'express';
 import { getCookie } from 'src/utils/helpers';
-import { AuthUser } from '@ems-fullstack/types';
+import { AuthUser } from '@ems-fullstack/utils';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {

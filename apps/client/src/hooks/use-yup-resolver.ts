@@ -1,39 +1,43 @@
 import { useCallback } from "react";
-import {
-  type Resolver,
-  type FieldErrors,
-  type FieldError,
-} from "react-hook-form";
-import { type AnyObjectSchema, type InferType, ValidationError } from "yup";
-import { set } from "lodash";
+import type { FieldErrors, Resolver } from "react-hook-form";
+import { ValidationError, type AnyObjectSchema, type InferType } from "yup";
 
-export const useYupValidationResolver = <TSchema extends AnyObjectSchema>(
-  validationSchema: TSchema,
-): Resolver<InferType<TSchema>> => {
-  return useCallback<Resolver<InferType<TSchema>>>(
+export function useYupValidationResolver<TSchema extends AnyObjectSchema>(
+  validationSchema: TSchema
+): Resolver<InferType<TSchema>> {
+  return useCallback(
     async (data) => {
       try {
         const values = await validationSchema.validate(data, {
-          abortEarly: false,
+          abortEarly: false
         });
-        return { values, errors: {} };
-      } catch (err: unknown) {
-        if (err instanceof ValidationError) {
-          const errors: FieldErrors<InferType<TSchema>> = {};
-          err.inner.forEach((currentError) => {
-            if (!currentError.path) return;
 
-            set(errors, currentError.path, {
-              type: currentError.type ?? "validation",
-              message: currentError.message,
-            } as FieldError);
+        return {
+          values,
+          errors: {}
+        };
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          const errors: Record<string, any> = {};
+
+          error.inner.forEach((err) => {
+            if (!err.path) return;
+
+            errors[err.path] = {
+              type: err.type ?? "validation",
+              message: err.message
+            };
           });
 
-          return { values: {} as InferType<TSchema>, errors };
+          return {
+            values: {} as InferType<TSchema>,
+            errors: errors as FieldErrors<InferType<TSchema>>
+          };
         }
-        throw err;
+
+        throw error;
       }
     },
-    [validationSchema],
+    [validationSchema]
   );
-};
+}

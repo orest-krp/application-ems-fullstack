@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { ValidationError } from 'yup';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -26,6 +27,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
       } else if (typeof res === 'object' && res !== null) {
         error = exception.name;
         messages = [exception.message];
+      }
+    } else if (exception instanceof ValidationError) {
+      status = HttpStatus.BAD_REQUEST;
+      error = 'ValidationError';
+
+      if (exception.inner && exception.inner.length > 0) {
+        messages = exception.inner.map((err) => err.message);
+      } else {
+        messages = exception.errors;
       }
     }
 

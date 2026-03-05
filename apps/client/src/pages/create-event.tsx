@@ -18,7 +18,7 @@ import {
   createEventSchema,
   EventVisibility,
   type CreateEventForm
-} from "@ems-fullstack/types";
+} from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
 import { EventFormFields } from "@/components/event-form-fields";
 import { useCallback } from "react";
@@ -61,7 +61,7 @@ export function CreateEvent() {
           className="flex items-center gap-2 px-0"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft />
           Back
         </Button>
       </div>

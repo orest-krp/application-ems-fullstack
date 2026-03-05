@@ -1,5 +1,5 @@
 import { fetcher } from "@/lib/fetcher";
-import type { FetchError } from "@ems-fullstack/types";
+import type { FetchError } from "@ems-fullstack/utils";
 import { useCallback, useState } from "react";
 
 export function useRegister() {

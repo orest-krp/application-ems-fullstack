@@ -4,7 +4,11 @@ import { UserService } from 'src/user/user.service';
 import argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { JWTProviders } from 'src/utils/constants';
-import { AuthUser, RegisterUserDto, User } from '@ems-fullstack/types';
+import {
+  AuthUser,
+  RegisterUserDto,
+  UserResponseDTO,
+} from '@ems-fullstack/utils';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +18,7 @@ export class AuthService {
     @Inject(JWTProviders.REFRESH) private readonly refreshJwt: JwtService,
   ) {}
 
-  async register(newUser: RegisterUserDto): Promise<User> {
+  async register(newUser: RegisterUserDto): Promise<UserResponseDTO> {
     return await this.userService.create(newUser);
   }
 

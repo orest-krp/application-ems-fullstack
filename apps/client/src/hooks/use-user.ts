@@ -1,5 +1,5 @@
 import { authfetcher } from "@/lib/fetcher";
-import type { FetchError, User } from "@ems-fullstack/types";
+import type { FetchError, UserResponseDTO } from "@ems-fullstack/utils";
 import useSWR, { mutate } from "swr";
 
 export function useUser() {
@@ -7,7 +7,7 @@ export function useUser() {
     data: user,
     error,
     isLoading
-  } = useSWR<User, FetchError>("/user/me", authfetcher, {
+  } = useSWR<UserResponseDTO, FetchError>("/user/me", authfetcher, {
     shouldRetryOnError: (err) => err.statusCode !== 401
   });
 

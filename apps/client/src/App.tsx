@@ -7,32 +7,20 @@ import { EventDetails } from "./pages/events-details";
 import { CreateEvent } from "./pages/create-event";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
-import { useUser } from "./hooks/use-user";
 import { Spinner } from "./components/spinner";
-import type React from "react";
-import type { User } from "@ems-fullstack/types";
+import { useUser } from "./hooks/use-user";
+import { NoAuthorized } from "./components/no-authorized";
 
-function ProtectedRoute({
-  user,
-  children
-}: React.PropsWithChildren<{ user: User | null }>) {
-  if (!user) return <Navigate to="/events" replace />;
-  return children;
-}
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useUser();
 
-function PublicRoute({
-  user,
-  children
-}: React.PropsWithChildren<{ user: User | null }>) {
-  if (user) return <Navigate to="/events" replace />;
+  if (isLoading) return <Spinner />;
+  if (!user) return <NoAuthorized />;
+
   return children;
 }
 
 export default function App() {
-  const { user, isLoading } = useUser();
-
-  if (isLoading) return <Spinner />;
-
   return (
     <>
       <Toaster />
@@ -43,27 +31,13 @@ export default function App() {
           <Route path="/events/:id" element={<EventDetails />} />
         </Route>
 
-        <Route
-          path="/login"
-          element={
-            <PublicRoute user={user}>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute user={user}>
-              <Register />
-            </PublicRoute>
-          }
-        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route
           path="/create-event"
           element={
-            <ProtectedRoute user={user}>
+            <ProtectedRoute>
               <CreateEvent />
             </ProtectedRoute>
           }

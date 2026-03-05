@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { getCookie } from 'src/utils/helpers';
-import { AuthUser } from '@ems-fullstack/types';
+import { AuthUser } from '@ems-fullstack/utils';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {

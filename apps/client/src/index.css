@@ -123,14 +123,18 @@
   * {
     @apply border-border outline-ring/50;
   }
-
+  
   body {
     @apply bg-background text-foreground;
   }
-
+  
   /* cursor-pointer fix for shadcn */
   button:not([disabled]),
     [role="button"]:not([disabled]) {
     cursor: pointer;
   }
+}
+
+body {
+  background-color: var(--primary-foreground);
 }

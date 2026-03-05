@@ -2,7 +2,7 @@ import {
   createEventApiSchema,
   type AuthReq,
   type CreateEventDto,
-} from '@ems-fullstack/types';
+} from '@ems-fullstack/utils';
 import {
   Body,
   Controller,
@@ -14,8 +14,8 @@ import {
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { YupValidationPipe } from 'src/utils/validation.pipe';
-import { ResponseEventDTO } from 'src/dto/event.dto';
+import { YupValidationPipe } from 'src/validation.pipe';
+import { EventApiResponseDTO } from 'src/dto/event.dto';
 
 @Controller('event')
 export class EventController {
@@ -26,13 +26,12 @@ export class EventController {
   async createEvent(
     @Body() event: CreateEventDto,
     @Req() req: AuthReq,
-  ): Promise<ResponseEventDTO> {
+  ): Promise<EventApiResponseDTO> {
     return await this.eventService.createEvent(event, req.user.id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
-  async getEvents(): Promise<ResponseEventDTO[]> {
-    return await this.eventService.getAll();
+  async getEvents(): Promise<EventApiResponseDTO[]> {
+    return await this.eventService.getAllPublic();
   }
 }

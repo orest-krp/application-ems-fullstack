@@ -8,7 +8,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { FormFieldLabel } from "@/components/ui/field-label";
 import { FieldLabel, FieldDescription } from "@/components/ui/field";
-import { EventVisibility } from "@ems-fullstack/types";
+import { EventVisibility } from "@ems-fullstack/utils";
+import { FormInput } from "./ui/form-input";
 
 interface EventFormFieldsProps {
   control: any;
@@ -30,6 +31,7 @@ export function EventFormFields({ control }: EventFormFieldsProps) {
           </Field>
         )}
       />
+      <FormInput name="title" control={control} label="Title" />
 
       <Controller
         name="description"

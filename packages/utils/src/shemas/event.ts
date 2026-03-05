@@ -69,29 +69,3 @@ export const createEventApiSchema = yup.object({
     .oneOf(["PUBLIC", "PRIVATE"])
     .required()
 });
-
-export type CreateEventForm = yup.InferType<typeof createEventSchema>;
-export type CreateEventDto = yup.InferType<typeof createEventApiSchema>;
-
-export enum EventVisibility {
-  PUBLIC = "PUBLIC",
-  PRIVATE = "PRIVATE"
-}
-
-export enum EventStatus {
-  UPCOMING = "UPCOMING",
-  ONGOING = "ONGOING",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED"
-}
-
-export type EventDto = {
-  id: string;
-  description: string | null;
-  capacity: number | null;
-  title: string;
-  dateTime: Date;
-  location: string;
-  visibility: EventVisibility;
-  status: EventStatus;
-};

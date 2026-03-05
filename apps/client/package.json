@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ems-fullstack/types": "workspace:*",
+    "@ems-fullstack/utils": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-icons": "^1.3.2",
     "@tailwindcss/vite": "^4.2.1",
@@ -19,7 +19,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
-    "lodash": "^4.17.23",
     "lucide-react": "^0.575.0",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",

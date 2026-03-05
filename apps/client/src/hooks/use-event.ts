@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { authfetcher } from "@/lib/fetcher";
-import type { CreateEventDto, FetchError } from "@ems-fullstack/types";
+import type { CreateEventDto, FetchError } from "@ems-fullstack/utils";
 
 export function useEvent() {
   const [loading, setLoading] = useState(false);

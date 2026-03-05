@@ -11,9 +11,9 @@ import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegister } from "@/hooks/use-register";
-import { registerUserShema, type RegisterUserDto } from "@ems-fullstack/types";
+import { registerUserShema, type RegisterUserDto } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
-import { FormInput } from "@/components/ui/auth-form-input";
+import { AuthFormInput } from "@/components/ui/auth-form-input";
 import { toast } from "sonner";
 import { ErrorMessage } from "@/components/ui/error-message";
 
@@ -43,32 +43,32 @@ export function Register() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <FieldGroup>
-              <FormInput
+              <AuthFormInput
                 name="name"
                 label="Name"
                 control={control}
                 autoComplete="new-password"
                 placeholder="Your user name"
                 type="text"
-                icon={<User className="w-4 h-4 text-muted-foreground" />}
+                icon={<User className="h-4 w-4 text-muted-foreground" />}
               />
-              <FormInput
+              <AuthFormInput
                 name="email"
                 label="Email"
                 control={control}
                 autoComplete="new-password"
                 placeholder="you@example.com"
                 type="email"
-                icon={<Mail className="w-4 h-4 text-muted-foreground" />}
+                icon={<Mail className="h-4 w-4 text-muted-foreground" />}
               />
-              <FormInput
+              <AuthFormInput
                 name="password"
                 label="Password"
                 control={control}
                 autoComplete="new-password"
                 placeholder="********"
                 type="password"
-                icon={<Lock className="w-4 h-4 text-muted-foreground" />}
+                icon={<Lock className="h-4 w-4 text-muted-foreground" />}
                 isPassword
               />
               <Button type="submit" className="w-full mt-2">

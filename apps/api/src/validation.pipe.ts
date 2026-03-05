@@ -1,4 +1,4 @@
-import { FetchError } from '@ems-fullstack/types';
+import { FetchError } from '@ems-fullstack/utils';
 import {
   PipeTransform,
   Injectable,

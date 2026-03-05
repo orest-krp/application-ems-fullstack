@@ -1,5 +1,5 @@
 import { authfetcher } from "@/lib/fetcher";
-import type { EventDto, FetchError } from "@ems-fullstack/types";
+import type { EventResponseDto, FetchError } from "@ems-fullstack/utils";
 import useSWR from "swr";
 
 export function useSearchEvents() {
@@ -7,7 +7,7 @@ export function useSearchEvents() {
     data: events,
     error,
     isLoading
-  } = useSWR<EventDto[], FetchError>("/event", authfetcher, {
+  } = useSWR<EventResponseDto[], FetchError>("/event", authfetcher, {
     shouldRetryOnError: (err) => err.statusCode !== 401
   });
 

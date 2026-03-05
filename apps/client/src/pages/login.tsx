@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@/hooks/use-login";
-import { loginUserSchema, type LoginUserDTO } from "@ems-fullstack/types";
+import { loginUserSchema, type LoginUserDTO } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
-import { FormInput } from "@/components/ui/auth-form-input";
+import { AuthFormInput } from "@/components/ui/auth-form-input";
 import { toast } from "sonner";
 import { ErrorMessage } from "@/components/ui/error-message";
+import { mutate } from "swr";
 
 export function Login() {
   const { login, error, setError } = useLogin();
@@ -28,6 +29,7 @@ export function Login() {
     setError(null);
     await login(data.email, data.password);
     await navigate("/events");
+    mutate("/user/me");
     toast.success("User has been authorized!");
   };
 
@@ -45,21 +47,21 @@ export function Login() {
             onChange={() => setError(null)}
           >
             <div className="flex flex-col gap-3">
-              <FormInput
+              <AuthFormInput
                 name="email"
                 label="Email"
                 control={control}
                 placeholder="you@example.com"
                 type="email"
-                icon={<Mail className="w-4 h-4 text-muted-foreground" />}
+                icon={<Mail className="h-4 w-4 text-muted-foreground" />}
               />
-              <FormInput
+              <AuthFormInput
                 name="password"
                 label="Password"
                 control={control}
                 placeholder="********"
                 type="password"
-                icon={<Lock className="w-4 h-4 text-muted-foreground" />}
+                icon={<Lock className="h-4 w-4 text-muted-foreground" />}
                 isPassword
               />
               <Button type="submit" className="w-full mt-2">

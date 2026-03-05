@@ -1,5 +1,5 @@
 {
-  "name": "@ems-fullstack/types",
+  "name": "@ems-fullstack/utils",
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",

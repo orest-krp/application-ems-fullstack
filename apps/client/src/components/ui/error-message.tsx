@@ -1,4 +1,4 @@
-import type { FetchError } from "@ems-fullstack/types";
+import type { FetchError } from "@ems-fullstack/utils";
 
 interface ErrorMessageProps {
   error: FetchError | null;
