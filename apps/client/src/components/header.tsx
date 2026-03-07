@@ -12,7 +12,6 @@ import {
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useNavigate, NavLink } from "react-router-dom";
-import { useUser } from "@/hooks/use-user";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -23,10 +22,22 @@ import {
   DropdownMenuTrigger
 } from "./ui/dropdown-menu";
 import clsx from "clsx";
+import { mutate } from "swr";
+import { useMutation } from "@/hooks/use-mutation";
+import { useAuth } from "@/hooks/use-auth";
 
 export function Header() {
   const navigate = useNavigate();
-  const { logout, user } = useUser();
+  const { mutate: logout } = useMutation("/auth/logout", "POST", {
+    onSuccess: () => {
+      toast.success("User logged out!");
+      mutate("/user/me");
+      navigate("/events");
+    }
+  });
+  const {
+    user: { data: user }
+  } = useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -43,13 +54,11 @@ export function Header() {
 
   const handleLogout = async () => {
     await logout();
-    toast.success("User logged out!");
-    setMobileOpen(false);
   };
 
   return (
-    <header className="border-b bg-background">
-      <div className="container mx-auto flex px-4 md:px-0 items-center justify-between py-4">
+    <header className="border-b bg-background px-4 md:px-8">
+      <div className="container mx-auto flex items-center justify-between py-4">
         <h1
           onClick={() => navigate("/events")}
           className="text-2xl font-bold cursor-pointer"
@@ -71,22 +80,19 @@ export function Header() {
             <SquareChartGantt className="h-4 w-4 mr-2" />
             Events
           </NavLink>
-          {user && (
-            <NavLink
-              to="/my-events"
-              end
-              className={({ isActive }) =>
-                clsx(
-                  "flex items-center hover:text-primary",
-                  !isActive && "text-muted-foreground"
-                )
-              }
-            >
-              <Calendar className="h-4 w-4 mr-2" />
-              My Events
-            </NavLink>
-          )}
-
+          <NavLink
+            to="/my-events"
+            end
+            className={({ isActive }) =>
+              clsx(
+                "flex items-center hover:text-primary",
+                !isActive && "text-muted-foreground"
+              )
+            }
+          >
+            <Calendar className="h-4 w-4 mr-2" />
+            My Events
+          </NavLink>
           {user ? (
             <div className="flex items-center gap-4">
               <Button
@@ -146,19 +152,16 @@ export function Header() {
                   <SquareChartGantt className="mr-2" />
                   Events
                 </DropdownMenuItem>
-                {user && (
-                  <DropdownMenuItem
-                    className="p-3"
-                    onClick={() => navigate("/my-events")}
-                  >
-                    <Calendar className="mr-2" />
-                    My Events
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem
+                  className="p-3"
+                  onClick={() => navigate("/my-events")}
+                >
+                  <Calendar className="mr-2" />
+                  My Events
+                </DropdownMenuItem>
               </DropdownMenuGroup>
 
               <DropdownMenuSeparator />
-
               {user ? (
                 <>
                   <DropdownMenuItem

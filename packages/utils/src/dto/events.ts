@@ -1,8 +1,9 @@
-import { createEventApiSchema, createEventSchema } from "../shemas/event.js";
+import { eventApiSchema, eventSchema } from "../shemas/event.js";
 import yup from "yup";
+import { UserResponseDTO } from "./users.js";
 
-export type CreateEventForm = yup.InferType<typeof createEventSchema>;
-export type CreateEventDto = yup.InferType<typeof createEventApiSchema>;
+export type EventRequestForm = yup.InferType<typeof eventSchema>;
+export type EventApiRequestDto = yup.InferType<typeof eventApiSchema>;
 
 export enum EventVisibility {
   PUBLIC = "PUBLIC",
@@ -16,13 +17,26 @@ export enum EventStatus {
   CANCELLED = "CANCELLED"
 }
 
+export interface ParticipantWithUser {
+  id: string;
+  joinedAt: Date;
+  userId: string;
+  user: UserResponseDTO;
+  eventId: string;
+}
+
 export interface EventResponseDto {
   id: string;
   description: string | null;
   capacity: number | null;
   title: string;
   dateTime: Date;
+  organizerId: string;
   location: string;
   visibility: EventVisibility;
-  status: EventStatus;
+}
+
+export interface EventDetailsResponseDto extends EventResponseDto {
+  participants: ParticipantWithUser[];
+  invitationLink: string;
 }

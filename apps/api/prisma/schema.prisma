@@ -28,7 +28,6 @@ model Event {
   location     String
   capacity     Int?
   visibility   EventVisibility @default(PUBLIC)
-  status       EventStatus     @default(UPCOMING)
   organizerId  String
   organizer    User            @relation("OrganizerEvents", fields: [organizerId], references: [id])
   participants Participant[]
@@ -42,7 +41,7 @@ model Participant {
   userId   String
   eventId  String
   user     User     @relation(fields: [userId], references: [id])
-  event    Event    @relation(fields: [eventId], references: [id])
+  event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   joinedAt DateTime @default(now())
 
   @@unique([userId, eventId])
@@ -51,11 +50,4 @@ model Participant {
 enum EventVisibility {
   PUBLIC
   PRIVATE
-}
-
-enum EventStatus {
-  UPCOMING
-  ONGOING
-  COMPLETED
-  CANCELLED
 }

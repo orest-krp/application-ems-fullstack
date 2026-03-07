@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RefreshStrategy } from './strategies/refresh.strategy';
+import { OptionalJwtStrategy } from './strategies/optional.jwt.strategy';
 
 @Module({
   imports: [PassportModule],
@@ -19,6 +20,7 @@ import { RefreshStrategy } from './strategies/refresh.strategy';
     UserService,
     PrismaService,
     LocalStrategy,
+    OptionalJwtStrategy,
     RefreshStrategy,
     JwtStrategy,
     {

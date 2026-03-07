@@ -1,6 +1,6 @@
 import { Mail, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -9,28 +9,27 @@ import {
   CardDescription
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useLogin } from "@/hooks/use-login";
 import { loginUserSchema, type LoginUserDTO } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
 import { AuthFormInput } from "@/components/ui/auth-form-input";
-import { toast } from "sonner";
 import { ErrorMessage } from "@/components/ui/error-message";
-import { mutate } from "swr";
+import { useAuth } from "@/hooks/use-auth";
 
 export function Login() {
-  const { login, error, setError } = useLogin();
-  const navigate = useNavigate();
+  const {
+    login,
+    errors: { loginError },
+    setLoginError
+  } = useAuth();
+
   const { handleSubmit, control } = useForm<LoginUserDTO>({
     resolver: useYupValidationResolver(loginUserSchema),
     defaultValues: { email: "", password: "" }
   });
 
   const onSubmit = async (data: LoginUserDTO) => {
-    setError(null);
-    await login(data.email, data.password);
-    await navigate("/events");
-    mutate("/user/me");
-    toast.success("User has been authorized!");
+    setLoginError(null);
+    await login(data);
   };
 
   return (
@@ -44,7 +43,7 @@ export function Login() {
           <form
             noValidate
             onSubmit={handleSubmit((data) => void onSubmit(data))}
-            onChange={() => setError(null)}
+            onChange={() => setLoginError(null)}
           >
             <div className="flex flex-col gap-3">
               <AuthFormInput
@@ -68,7 +67,7 @@ export function Login() {
                 Login
               </Button>
             </div>
-            <ErrorMessage error={error} />
+            <ErrorMessage error={loginError} />
             <div className="mt-4 text-center">
               <Link to="/register" className="text-sm hover:underline">
                 Don't have an account? Register

@@ -2,10 +2,24 @@ import { Module } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventController } from './event.controller';
 import { PrismaService } from 'src/prisma.service';
+import { JWTProviders } from 'src/utils/constants';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [],
-  providers: [EventService, PrismaService],
+  providers: [
+    EventService,
+    PrismaService,
+    {
+      provide: JWTProviders.EVENT,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) =>
+        new JwtService({
+          secret: config.getOrThrow('jwt.invitationToken'),
+        }),
+    },
+  ],
   controllers: [EventController],
 })
 export class EventModule {}

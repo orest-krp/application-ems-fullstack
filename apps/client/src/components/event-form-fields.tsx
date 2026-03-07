@@ -1,15 +1,15 @@
 "use client";
 
 import { Controller } from "react-hook-form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { FormFieldLabel } from "@/components/ui/field-label";
-import { FieldLabel, FieldDescription } from "@/components/ui/field";
+import { FieldLabel } from "@/components/ui/field";
 import { EventVisibility } from "@ems-fullstack/utils";
 import { FormInput } from "./ui/form-input";
+import { FormDatePicker } from "./ui/date-picker";
 
 interface EventFormFieldsProps {
   control: any;
@@ -18,112 +18,56 @@ interface EventFormFieldsProps {
 export function EventFormFields({ control }: EventFormFieldsProps) {
   return (
     <FieldGroup className="gap-4">
-      <Controller
+      <FormInput
         name="title"
+        id="title"
         control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FormFieldLabel required htmlFor="event-title">
-              Title
-            </FormFieldLabel>
-            <Input {...field} id="event-title" placeholder="Event title" />
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-          </Field>
-        )}
+        label="Title"
+        placeholder="Title"
       />
-      <FormInput name="title" control={control} label="Title" />
-
       <Controller
         name="description"
         control={control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FormFieldLabel htmlFor="event-description">
-              Description
-            </FormFieldLabel>
-            <Textarea
-              {...field}
-              id="event-description"
-              placeholder="Event description"
-              rows={3}
-              className="resize-none"
-            />
+            <FormFieldLabel htmlFor="description">Description</FormFieldLabel>
+            <Textarea {...field} id="description" rows={3} />
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
       />
 
       <div className="flex flex-col gap-4 sm:flex-row">
-        <Controller
+        <FormDatePicker
           name="date"
+          id="date"
           control={control}
-          render={({ field, fieldState }) => (
-            <Field className="flex-1" data-invalid={fieldState.invalid}>
-              <FormFieldLabel required htmlFor="event-date">
-                Date
-              </FormFieldLabel>
-              <Input {...field} id="event-date" type="date" />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
+          label="Date"
+          placeholder="Date"
         />
-        <Controller
+        <FormInput
           name="time"
+          id="time"
+          type="time"
           control={control}
-          render={({ field, fieldState }) => (
-            <Field className="flex-1" data-invalid={fieldState.invalid}>
-              <FormFieldLabel required htmlFor="event-time">
-                Time
-              </FormFieldLabel>
-              <Input {...field} id="event-time" type="time" />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
+          label="Time"
+          placeholder="Time"
         />
       </div>
-
-      <Controller
+      <FormInput
         name="location"
+        id="location"
         control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FormFieldLabel required htmlFor="event-location">
-              Location
-            </FormFieldLabel>
-            <Input
-              {...field}
-              id="event-location"
-              placeholder="Event location"
-            />
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-          </Field>
-        )}
+        label="Location"
+        placeholder="Event location"
       />
-
-      <Controller
+      <FormInput
         name="capacity"
+        id="capacity"
         control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FormFieldLabel htmlFor="event-capacity">Capacity</FormFieldLabel>
-            <Input
-              {...field}
-              value={field.value || ""}
-              id="event-capacity"
-              type="number"
-              min="1"
-              placeholder="Maximum participants"
-              onChange={(e) =>
-                field.onChange(
-                  e.target.value === "" ? undefined : Number(e.target.value)
-                )
-              }
-            />
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-          </Field>
-        )}
+        label="Capacity"
+        placeholder="Event capacity"
       />
-
       <Controller
         name="visibility"
         control={control}
@@ -133,26 +77,27 @@ export function EventFormFields({ control }: EventFormFieldsProps) {
             <RadioGroup
               value={field.value}
               onValueChange={(val) => field.onChange(val)}
-              className="flex gap-6 mt-2"
+              className="gap-4 mt-2"
             >
               <div className="flex items-center gap-2">
                 <RadioGroupItem
                   value={EventVisibility.PUBLIC}
                   id="visibility-public"
                 />
-                <Label htmlFor="visibility-public">Public</Label>
+                <Label htmlFor="visibility-public">
+                  Public - Anyone can see and join this event
+                </Label>
               </div>
               <div className="flex items-center gap-2">
                 <RadioGroupItem
                   value={EventVisibility.PRIVATE}
                   id="visibility-private"
                 />
-                <Label htmlFor="visibility-private">Private</Label>
+                <Label htmlFor="visibility-private">
+                  Private - only invited people can see this event
+                </Label>
               </div>
             </RadioGroup>
-            <FieldDescription>
-              Choose whether your event is visible to everyone or private.
-            </FieldDescription>
           </Field>
         )}
       />

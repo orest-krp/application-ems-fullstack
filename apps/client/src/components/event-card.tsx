@@ -11,12 +11,12 @@ interface EventCardProps {
 
 export function EventCard({ event }: EventCardProps) {
   return (
-    <Link to={`/event/{event.id}`}>
+    <Link to={`/events/${event.id}`}>
       <Card className="hover:shadow-lg transition flex flex-col">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{event.title}</CardTitle>
-            <Badge variant="secondary">{event.status}</Badge>
+            <Badge variant="secondary">{event.visibility}</Badge>
           </div>
         </CardHeader>
 

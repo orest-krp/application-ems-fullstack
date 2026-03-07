@@ -1,7 +1,8 @@
 import * as yup from "yup";
 import dayjs from "dayjs";
+import { EventVisibility } from "../dto/events.js";
 
-export const createEventSchema = yup
+export const eventSchema = yup
   .object({
     title: yup.string().required("Event title is required").min(3).max(100),
 
@@ -14,15 +15,22 @@ export const createEventSchema = yup
     location: yup.string().required("Location is required").min(3).max(100),
 
     capacity: yup
-      .number()
-      .integer("Capacity must be an integer")
-      .positive("Capacity must be greater than 0")
+      .string()
+      .transform((value) => (value === "" ? null : value))
+      .nullable()
       .optional()
-      .nullable(),
-
+      .test(
+        "is-valid-capacity",
+        "Capacity must be a positive number",
+        (value) => {
+          if (value == null) return true;
+          const num = Number(value);
+          return Number.isInteger(num) && num > 0;
+        }
+      ),
     visibility: yup
-      .mixed<"PUBLIC" | "PRIVATE">()
-      .oneOf(["PUBLIC", "PRIVATE"])
+      .mixed<EventVisibility.PUBLIC | EventVisibility.PRIVATE>()
+      .oneOf([EventVisibility.PUBLIC, EventVisibility.PRIVATE])
       .required("Visibility is required")
   })
   .test("is-future-datetime", function (values) {
@@ -51,7 +59,7 @@ export const createEventSchema = yup
     return true;
   });
 
-export const createEventApiSchema = yup.object({
+export const eventApiSchema = yup.object({
   title: yup.string().required().min(3).max(100),
   description: yup.string().max(500).optional(),
   dateTime: yup
@@ -65,7 +73,7 @@ export const createEventApiSchema = yup.object({
   location: yup.string().required().min(3).max(100),
   capacity: yup.number().integer().positive().nullable().optional(),
   visibility: yup
-    .mixed<"PUBLIC" | "PRIVATE">()
-    .oneOf(["PUBLIC", "PRIVATE"])
+    .mixed<EventVisibility.PUBLIC | EventVisibility.PRIVATE>()
+    .oneOf([EventVisibility.PUBLIC, EventVisibility.PRIVATE])
     .required()
 });

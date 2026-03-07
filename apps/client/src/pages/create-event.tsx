@@ -1,7 +1,5 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -14,41 +12,28 @@ import {
   CardTitle
 } from "@/components/ui/card";
 
-import {
-  createEventSchema,
-  EventVisibility,
-  type CreateEventForm
-} from "@ems-fullstack/utils";
-import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
+import { type EventRequestForm } from "@ems-fullstack/utils";
 import { EventFormFields } from "@/components/event-form-fields";
 import { useCallback } from "react";
 import { mergeDateTime } from "@/lib/utils";
-import { useEvent } from "@/hooks/use-event";
-import { toast } from "sonner";
 import { ErrorMessage } from "@/components/ui/error-message";
+import { useEventForm } from "@/hooks/use-event-form";
+import { useCreateEvent } from "@/hooks/use-create-event";
 
 export function CreateEvent() {
   const navigate = useNavigate();
-  const { error, setError, createEvent } = useEvent();
 
-  const { handleSubmit, control } = useForm<CreateEventForm>({
-    resolver: useYupValidationResolver(createEventSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      date: dayjs().format("YYYY-MM-DD"),
-      time: dayjs().format("HH:mm"),
-      location: "",
-      capacity: undefined,
-      visibility: EventVisibility.PUBLIC
-    }
-  });
+  const { handleSubmit, control } = useEventForm();
 
-  const onCreate = useCallback(async (data: CreateEventForm) => {
+  const { createEvent, setError, error } = useCreateEvent();
+
+  const onCreate = useCallback(async (data: EventRequestForm) => {
     const { date, time, ...rest } = data;
-    await createEvent({ ...rest, dateTime: mergeDateTime(date, time) });
-    await navigate("/events");
-    toast.success("Event has been created succesfully");
+    await createEvent({
+      ...rest,
+      dateTime: mergeDateTime(date, time),
+      capacity: Number(data.capacity)
+    });
   }, []);
 
   return (
@@ -76,36 +61,29 @@ export function CreateEvent() {
           </CardDescription>
         </div>
 
-        <CardContent className="pt-6">
-          <form
-            id="create-event-form"
-            noValidate
-            onChange={() => {
-              setError(null);
-            }}
-            onSubmit={handleSubmit(onCreate)}
-          >
+        <form
+          noValidate
+          onChange={() => setError(null)}
+          onSubmit={handleSubmit(onCreate)}
+        >
+          <CardContent>
             <EventFormFields control={control} />
-          </form>
-        </CardContent>
+          </CardContent>
+          <CardFooter className="flex flex-col-reverse gap-3 mt-6 sm:flex-row sm:justify-end">
+            <Button
+              onClick={() => navigate(-1)}
+              type="button"
+              variant="outline"
+              className="flex-1 sm:w-auto"
+            >
+              Cancel
+            </Button>
 
-        <CardFooter className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button
-            onClick={() => navigate(-1)}
-            type="button"
-            variant="outline"
-            className="flex-1 sm:w-auto"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form="create-event-form"
-            className="flex-1 sm:w-auto"
-          >
-            Create Event
-          </Button>
-        </CardFooter>
+            <Button type="submit" className="flex-1 sm:w-auto">
+              Create Event
+            </Button>
+          </CardFooter>
+        </form>
         <ErrorMessage error={error} />
       </Card>
     </div>

@@ -4,7 +4,7 @@ import {
   type FieldValues,
   type Path
 } from "react-hook-form";
-import { Field, FieldError } from "./field";
+import { Field, FieldDescription, FieldError } from "./field";
 import { FormFieldLabel } from "./field-label";
 import { Input } from "./input";
 
@@ -13,15 +13,20 @@ interface FormInputProps<T extends FieldValues> extends React.DetailedHTMLProps<
   HTMLInputElement
 > {
   name: Path<T>;
-  label: string;
+  label?: string;
   control: Control<T>;
   icon?: React.ReactNode;
   isPassword?: boolean;
+  required?: boolean;
+  description?: string;
 }
 
 export function FormInput<T extends FieldValues>({
   control,
   name,
+  label,
+  description,
+  required = true,
   ...rest
 }: FormInputProps<T>) {
   return (
@@ -30,16 +35,20 @@ export function FormInput<T extends FieldValues>({
       control={control}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FormFieldLabel required htmlFor={name}>
-            Title
-          </FormFieldLabel>
+          {label && (
+            <FormFieldLabel required={required} htmlFor={name}>
+              {label}
+            </FormFieldLabel>
+          )}
           <Input
             {...field}
+            className="text-sm font-normal"
             id={name}
             aria-invalid={fieldState.invalid}
             {...rest}
           />
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          {description && <FieldDescription>{description}</FieldDescription>}
         </Field>
       )}
     />

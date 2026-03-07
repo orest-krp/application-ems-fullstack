@@ -9,17 +9,19 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
-import { Link, useNavigate } from "react-router-dom";
-import { useRegister } from "@/hooks/use-register";
+import { Link } from "react-router-dom";
 import { registerUserShema, type RegisterUserDto } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
 import { AuthFormInput } from "@/components/ui/auth-form-input";
-import { toast } from "sonner";
 import { ErrorMessage } from "@/components/ui/error-message";
+import { useAuth } from "@/hooks/use-auth";
 
 export function Register() {
-  const { register: registerUser, error, setError } = useRegister();
-  const navigate = useNavigate();
+  const {
+    register,
+    errors: { registerError },
+    setRegisterError
+  } = useAuth();
 
   const { handleSubmit, control } = useForm<RegisterUserDto>({
     resolver: useYupValidationResolver(registerUserShema),
@@ -27,10 +29,8 @@ export function Register() {
   });
 
   const onSubmit = async (data: RegisterUserDto) => {
-    setError(null);
-    await registerUser(data.name, data.email, data.password);
-    await navigate("/login");
-    toast.success("User has been registered!");
+    setRegisterError(null);
+    await register(data);
   };
 
   return (
@@ -75,7 +75,7 @@ export function Register() {
                 Register
               </Button>
             </FieldGroup>
-            <ErrorMessage error={error} />
+            <ErrorMessage error={registerError} />
             <div className="mt-4 text-center">
               <Link to="/login" className="text-sm hover:underline">
                 Already have an account? Login

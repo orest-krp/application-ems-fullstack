@@ -1,11 +1,29 @@
 import { CalendarOff } from "lucide-react";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyContent
+} from "@/components/ui/empty";
 
-export function NoEvents({ message = "No events found." }) {
+interface NoEventsProps {
+  message?: string;
+}
+
+export function NoEvents({ message = "No events found." }: NoEventsProps) {
   return (
-    <div className="flex flex-col items-center h-full justify-center py-10 text-center space-y-4 text-muted-foreground">
-      <CalendarOff className="w-12 h-12 text-secondary-text animate-bounce" />
+    <Empty>
+      <EmptyHeader>
+        <EmptyContent>
+          <CalendarOff className="h-30 w-30 text-muted-foreground" />
+        </EmptyContent>
 
-      <p className="text-lg font-medium">{message}</p>
-    </div>
+        <EmptyTitle>{message}</EmptyTitle>
+        <EmptyDescription>
+          There are currently no events available.
+        </EmptyDescription>
+      </EmptyHeader>
+    </Empty>
   );
 }

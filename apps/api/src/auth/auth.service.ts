@@ -55,7 +55,6 @@ export class AuthService {
 
   async validateJwtUser(id: string) {
     const user = await this.userService.findById(id);
-
     if (!user) {
       throw new UnauthorizedException('Bad credentials');
     }

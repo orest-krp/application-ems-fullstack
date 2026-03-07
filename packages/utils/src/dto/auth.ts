@@ -13,6 +13,10 @@ export interface AuthReq {
   user: AuthUser;
 }
 
+export interface OptionalAuthReq {
+  user: AuthUser | null;
+}
+
 export interface TokensResponseDto {
   accessToken: string;
   refreshToken: string;

@@ -1,19 +1,7 @@
-import { authfetcher } from "@/lib/fetcher";
-import type { EventResponseDto, FetchError } from "@ems-fullstack/utils";
-import useSWR from "swr";
+import type { EventResponseDto } from "@ems-fullstack/utils";
+import { useApiGet } from "./use-api-get";
+import type { UseApiGetResult } from "@/lib/types";
 
-export function useSearchEvents() {
-  const {
-    data: events,
-    error,
-    isLoading
-  } = useSWR<EventResponseDto[], FetchError>("/event", authfetcher, {
-    shouldRetryOnError: (err) => err.statusCode !== 401
-  });
-
-  return {
-    events: events || [],
-    isLoading,
-    error
-  };
+export function useSearchEvents(): UseApiGetResult<EventResponseDto[]> {
+  return useApiGet<EventResponseDto[]>("/event");
 }

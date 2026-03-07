@@ -1,3 +1,4 @@
+import { FetchError } from '@ems-fullstack/utils';
 import {
   ExceptionFilter,
   Catch,
@@ -15,30 +16,43 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let messages = ['Server error'];
+    let messages: string[] = ['Server error'];
     let error = 'Server error';
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
-
       const res = exception.getResponse();
       if (typeof res === 'string') {
         messages = [res];
-      } else if (typeof res === 'object' && res !== null) {
         error = exception.name;
-        messages = [exception.message];
+      } else if (typeof res === 'object' && res !== null) {
+        const r = res as Partial<FetchError> & {
+          message?: string | string[];
+        };
+
+        error = r.error ?? exception.name;
+
+        if (Array.isArray(r.messages)) {
+          messages = r.messages;
+        } else if (Array.isArray(r.message)) {
+          messages = r.message;
+        } else if (typeof r.message === 'string') {
+          messages = [r.message];
+        }
       }
     } else if (exception instanceof ValidationError) {
       status = HttpStatus.BAD_REQUEST;
       error = 'ValidationError';
 
-      if (exception.inner && exception.inner.length > 0) {
-        messages = exception.inner.map((err) => err.message);
-      } else {
-        messages = exception.errors;
-      }
+      messages = exception.inner?.length
+        ? exception.inner.map((err) => err.message)
+        : exception.errors;
     }
 
-    response.status(status).json({ statusCode: status, error, messages });
+    response.status(status).json({
+      statusCode: status,
+      error,
+      messages,
+    });
   }
 }
