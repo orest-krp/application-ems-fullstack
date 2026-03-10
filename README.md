@@ -1,4 +1,4 @@
-# 🚀 EMS — Employee Management System
+# 🚀 EMS — Event Management System
 
 A **full-stack Employee Management System (EMS)** built with **NestJS** for the backend and **React + Vite** for the frontend in a **Turborepo monorepo** architecture.  
 The application uses **PostgreSQL** as the primary database and runs easily with **Docker & Docker Compose**.
