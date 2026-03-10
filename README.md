@@ -69,12 +69,22 @@ cp env.example .env
 Example `.env` file:
 
 ```env
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=ems
-POSTGRES_PORT=5432
+POSTGRES_USER=myuser
+POSTGRES_PASSWORD=mypassword
+POSTGRES_DB=db
 
-DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ems
+VITE_API_URL=http://localhost:8000
+
+PORT=8000
+FRONTEND_URL=http://localhost:5173
+DATABASE_URL=postgresql://myuser:mypassword@db:5432/ems?schema=public
+
+JWT_ACCESS_SECRET=token_txH01KHrSLBaQuEwTC8k67fa6DiAmF7S
+JWT_REFRESH_SECRET=token_LAQff8fYAbJ5V8iCyw5xcZmQHNSXr3rb
+JWT_ACCESS_EXPIRATION_TIME=5m
+JWT_REFRESH_EXPIRATION_TIME=7d
+
+JWT_INVITATION=token_W28T0IV5Qeiq3jdeBZsR22vBlmdCB3fd
 ```
 
 ## 🐳 Running the Application with Docker
