@@ -56,6 +56,56 @@ async function main() {
     },
   });
 
+  const dave = await prisma.user.create({
+    data: {
+      name: 'Dave Wilson',
+      email: 'dave@example.com',
+      password: 'password123',
+    },
+  });
+
+  const emma = await prisma.user.create({
+    data: {
+      name: 'Emma Davis',
+      email: 'emma@example.com',
+      password: 'password123',
+    },
+  });
+
+  const event3 = await prisma.event.create({
+    data: {
+      title: 'React Bootcamp',
+      description: 'Intensive React training for developers.',
+      dateTime: new Date('2026-04-10T09:00:00Z'),
+      location: 'Online',
+      capacity: 30,
+      visibility: EventVisibility.PUBLIC,
+      organizerId: charlie.id,
+    },
+  });
+
+  const event4 = await prisma.event.create({
+    data: {
+      title: 'Yoga Retreat',
+      description: 'Weekend retreat for relaxation and mindfulness.',
+      dateTime: new Date('2026-04-12T08:00:00Z'),
+      location: 'Peaceful Valley, Wellness Town',
+      capacity: 20,
+      visibility: EventVisibility.PRIVATE,
+      organizerId: emma.id,
+    },
+  });
+
+  await prisma.participant.createMany({
+    data: [
+      { userId: alice.id, eventId: event3.id },
+      { userId: bob.id, eventId: event3.id },
+      { userId: dave.id, eventId: event3.id },
+      { userId: charlie.id, eventId: event4.id },
+      { userId: dave.id, eventId: event4.id },
+    ],
+  });
+
   await prisma.participant.createMany({
     data: [
       { userId: bob.id, eventId: event1.id },

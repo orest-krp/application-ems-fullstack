@@ -1,0 +1,26 @@
+ARG NODE_VERSION=24.12.0-alpine
+FROM node:${NODE_VERSION}
+
+WORKDIR /app
+
+RUN npm install -g pnpm prisma
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+
+COPY apps/api ./apps/api
+COPY packages ./packages
+
+RUN pnpm install
+
+WORKDIR /app/apps/api
+
+EXPOSE 8000
+
+CMD ["sh", "-c", "\
+    echo 'Running generate...' && \
+    pnpm run generate || echo 'Generate failed, continuing...' && \
+    echo 'Running seed...' && \
+    pnpm run seed || echo 'Seed failed, continuing...' && \
+    echo 'Starting dev server...' && \
+    pnpm run dev \
+    "]

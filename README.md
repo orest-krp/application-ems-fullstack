@@ -1,135 +1,142 @@
-# Turborepo starter
+# 🚀 EMS — Employee Management System
 
-This Turborepo starter is maintained by the Turborepo core team.
+A **full-stack Employee Management System (EMS)** built with **NestJS** for the backend and **React + Vite** for the frontend in a **Turborepo monorepo** architecture.  
+The application uses **PostgreSQL** as the primary database and runs easily with **Docker & Docker Compose**.
 
-## Using this example
+---
 
-Run the following command:
+## 🧰 Tech Stack
 
-```sh
-npx create-turbo@latest
-```
+| Layer            | Technology              |
+| ---------------- | ----------------------- |
+| Backend          | NestJS, TypeScript      |
+| Frontend         | React, Vite, TypeScript |
+| Database         | PostgreSQL              |
+| Monorepo         | Turborepo               |
+| Containerization | Docker & Docker Compose |
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## 📦 Project Structure
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+application-ems-fullstack
+│
+├── apps
+│   ├── api        # NestJS backend
+│   └── client     # Vite + React frontend
+│
+├── packages       # Shared packages / configs
+│
+├── docker-compose.yml
+├── turbo.json
+└── package.json
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+## 🚀 Getting Started
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+### 1️⃣ Prerequisites
 
-### Develop
+Make sure you have installed:
 
-To develop all apps and packages, run the following command:
+- Docker
+- Docker Compose
+- Node.js **v20+** (optional for local development)
 
-```
-cd my-turborepo
+---
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+## 📥 Clone the Repository
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```bash
+git clone https://github.com/orest-krp/application-ems-fullstack.git
+cd application-ems-fullstack
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+---
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+## ⚙️ Environment Setup
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+Create a `.env` file in the **root directory**.
 
-### Remote Caching
+You can copy the example configuration:
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+cp env.example .env
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Example `.env` file:
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+```env
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=ems
+POSTGRES_PORT=5432
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ems
 ```
 
-## Useful Links
+## 🐳 Running the Application with Docker
 
-Learn more about the power of Turborepo:
+### Build Docker Images
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+Run this **only the first time** or after Dockerfile changes.
+
+```bash
+docker compose build
+```
+
+---
+
+### Start All Services
+
+```bash
+docker compose up -d
+```
+
+The `-d` flag runs containers in **detached mode** (background).
+
+---
+
+### Start & Build in One Command
+
+```bash
+docker compose up --build
+```
+
+---
+
+### Check Running Containers
+
+```bash
+docker compose ps
+```
+
+---
+
+### View Logs
+
+```bash
+docker compose logs -f
+```
+
+---
+
+### Stop the Application
+
+```bash
+docker compose down
+```
+
+---
+
+## 🌐 Access the Application
+
+Once the containers are running:
+
+| Service     | URL                   |
+| ----------- | --------------------- |
+| Frontend    | http://localhost:5173 |
+| Backend API | http://localhost:3000 |
+| PostgreSQL  | localhost:5432        |
