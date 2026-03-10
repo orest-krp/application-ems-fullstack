@@ -99,7 +99,7 @@ export function EventDetails() {
           variant="ghost"
           size="sm"
           className="mb-4 flex items-center gap-2 px-0"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/events")}
         >
           <ArrowLeft />
           Back
