@@ -8,7 +8,7 @@ import { useApiGet } from "./use-api-get";
 export function useEventPermissions(
   event: EventDetailsResponse | EventCardDetailsResponse | null
 ) {
-  const { data: user } = useApiGet<UserResponse>("/user/me");
+  const { data: user } = useApiGet<UserResponse>("/user/me", "/user/me");
 
   const isOrganizer = event?.organizerId === user?.id;
   const isJoined =

@@ -11,7 +11,10 @@ interface UseEventDetailsResult {
 }
 
 export function useEventDetails(eventId: string | null): UseEventDetailsResult {
-  const eventDetails = useApiGet<EventDetailsResponse>(`/event/${eventId}`);
+  const eventDetails = useApiGet<EventDetailsResponse>(
+    `/event/${eventId}`,
+    `/event/${eventId}`
+  );
 
   const { isOrganizer, isJoined, isFull } = useEventPermissions(
     eventDetails.data

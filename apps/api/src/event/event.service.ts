@@ -162,7 +162,6 @@ export class EventService {
   }
 
   async getAllAccessible(
-    userId?: string,
     page: number = 1,
     pageSize: number = 10,
     search?: string,
@@ -179,20 +178,7 @@ export class EventService {
       : {};
 
     const whereClause = {
-      AND: [
-        searchFilter,
-        {
-          OR: [
-            { visibility: EventVisibility.PUBLIC },
-            ...(userId
-              ? [
-                  { organizerId: userId },
-                  { participants: { some: { userId } } },
-                ]
-              : []),
-          ],
-        },
-      ],
+      AND: [searchFilter, { visibility: EventVisibility.PUBLIC }],
     };
 
     const events = await this.prismaService.event.findMany({

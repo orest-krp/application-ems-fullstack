@@ -97,7 +97,6 @@ export class EventController {
   }
 
   @ApiOperation({ summary: 'Get all accessible events' })
-  @UseGuards(OptionalJwtAuthGuard)
   @Get()
   async getEvents(
     @Req() req: OptionalAuthReq,
@@ -115,7 +114,6 @@ export class EventController {
     const pageSizeNumber = pageSize ? parseInt(pageSize, 10) : 10;
 
     return await this.eventService.getAllAccessible(
-      req.user?.id,
       pageNumber,
       pageSizeNumber,
       search,

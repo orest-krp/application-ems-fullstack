@@ -6,7 +6,7 @@ import { mutate } from "swr";
 import { useNavigate } from "react-router-dom";
 
 export function useAuth() {
-  const user = useApiGet<UserResponse>("/user/me");
+  const user = useApiGet<UserResponse>("/user/me", "/user/me");
   const navigate = useNavigate();
   const {
     mutate: login,

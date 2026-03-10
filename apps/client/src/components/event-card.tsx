@@ -1,7 +1,6 @@
 import { CalendarDays, Clock, MapPin, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { Badge } from "@/components/ui/badge";
 import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 import { useEventActions } from "@/hooks/use-event-actions";
@@ -45,7 +44,6 @@ export function EventCard({ event }: EventCardProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{event.title}</CardTitle>
-            <Badge variant="secondary">{event.visibility}</Badge>
           </div>
         </CardHeader>
 

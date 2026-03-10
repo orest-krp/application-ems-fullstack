@@ -6,10 +6,12 @@ import type { UseApiGetResult } from "@/lib/types";
 
 type UseApiGetOptions = {
   retryOn?: number[];
+  params?: Record<string, string>;
 } & SWRConfiguration;
 
 export function useApiGet<T>(
-  url: string | null,
+  url: string,
+  key: string,
   options?: UseApiGetOptions
 ): UseApiGetResult<T> {
   const firstLoad = useRef(true);
@@ -20,13 +22,13 @@ export function useApiGet<T>(
     error,
     isLoading: swrLoading,
     mutate
-  } = useSWR<T, FetchError>(url, authfetcher, {
+  } = useSWR<T, FetchError>(key, async () => authfetcher(url), {
     shouldRetryOnError: (err) =>
       retryOn.length === 0
         ? ![401, 404].includes(err.statusCode)
         : retryOn.includes(err.statusCode),
     revalidateOnFocus: true,
-    keepPreviousData: true,
+
     ...options
   });
 
@@ -38,7 +40,7 @@ export function useApiGet<T>(
       data: null,
       isLoading: false,
       error,
-      mutate: () => mutate()
+      mutate
     };
   }
 
@@ -47,7 +49,7 @@ export function useApiGet<T>(
       data: data ?? null,
       isLoading: true,
       error: null,
-      mutate: () => mutate()
+      mutate
     };
   }
 
@@ -56,7 +58,7 @@ export function useApiGet<T>(
       data: null,
       isLoading: true,
       error: null,
-      mutate: () => mutate()
+      mutate
     };
   }
 
@@ -64,6 +66,6 @@ export function useApiGet<T>(
     data: data,
     isLoading: false,
     error: null,
-    mutate: () => mutate()
+    mutate
   };
 }

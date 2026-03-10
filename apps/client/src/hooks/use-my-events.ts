@@ -3,5 +3,5 @@ import type { EventCardDetailsResponse } from "@ems-fullstack/utils";
 import { useApiGet } from "./use-api-get";
 
 export function useMyEvents(): UseApiGetResult<EventCardDetailsResponse[]> {
-  return useApiGet<EventCardDetailsResponse[]>("/event/my");
+  return useApiGet<EventCardDetailsResponse[]>("/event/my", "/event/my");
 }

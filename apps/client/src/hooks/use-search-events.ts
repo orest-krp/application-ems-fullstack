@@ -20,6 +20,8 @@ export function useSearchEvents(
     total: number;
     totalPages: number;
   }>(
-    `/event?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}`
+    `/event?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}`,
+    "/event",
+    { keepPreviousData: true }
   );
 }

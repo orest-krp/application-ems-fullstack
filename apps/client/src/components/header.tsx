@@ -32,6 +32,7 @@ export function Header() {
     onSuccess: () => {
       toast.success("User logged out!");
       mutate("/user/me");
+      mutate("/event");
       navigate("/events");
     }
   });
