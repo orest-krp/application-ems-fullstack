@@ -21,7 +21,7 @@ export function useSearchEvents(
     totalPages: number;
   }>(
     `/event?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}`,
-    "/event",
+    ["/event", String(page), String(pageSize), String(search)],
     { keepPreviousData: true }
   );
 }

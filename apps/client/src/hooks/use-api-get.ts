@@ -11,7 +11,7 @@ type UseApiGetOptions = {
 
 export function useApiGet<T>(
   url: string,
-  key: string,
+  key: string | string[],
   options?: UseApiGetOptions
 ): UseApiGetResult<T> {
   const firstLoad = useRef(true);

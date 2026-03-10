@@ -33,15 +33,11 @@ export function Events() {
     return () => clearTimeout(handler);
   }, [search]);
 
-  const { data, isLoading, error, mutate } = useSearchEvents(
+  const { data, isLoading, error } = useSearchEvents(
     page,
     pageSize,
     debouncedSearch
   );
-
-  useEffect(() => {
-    mutate();
-  }, [page, pageSize, debouncedSearch]);
 
   if (error) return <ErrorState error={error} />;
   if (isLoading) return <Spinner />;

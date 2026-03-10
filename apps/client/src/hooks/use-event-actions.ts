@@ -3,6 +3,7 @@ import { useMutation } from "@/hooks/use-mutation";
 import { toast } from "sonner";
 import { mutate } from "swr";
 import { useNavigate } from "react-router-dom";
+import { mutateFirstKey } from "@/lib/utils";
 
 export function useEventActions(eventId: string | null, token?: string) {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export function useEventActions(eventId: string | null, token?: string) {
   } = useMutation<EventRequest>(`/event/${eventId}`, "PUT", {
     onSuccess: () => {
       toast.success("Event has been edited succesfully");
-      mutate("/event");
+      mutateFirstKey("/event");
       mutate(`/event/${eventId}`);
     }
   });
@@ -29,7 +30,7 @@ export function useEventActions(eventId: string | null, token?: string) {
     {
       onSuccess: () => {
         toast.success("User has been joined");
-        mutate("/event");
+        mutateFirstKey("/event");
         mutate(`/event/${eventId}`);
       },
       onError: (error) => {
@@ -43,7 +44,7 @@ export function useEventActions(eventId: string | null, token?: string) {
       onSuccess: () => {
         toast.success("User has been leaved");
         navigate("/events");
-        mutate("/event");
+        mutateFirstKey("/event");
         mutate(`/event/${eventId}`);
       },
       onError: (error) => {
@@ -58,7 +59,7 @@ export function useEventActions(eventId: string | null, token?: string) {
       onSuccess: () => {
         toast.success("Event has been deleted");
         navigate("/events");
-        mutate("/event");
+        mutateFirstKey("/event");
         mutate(`/event/${eventId}`);
       },
       onError: (error) => {

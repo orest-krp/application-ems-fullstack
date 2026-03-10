@@ -25,6 +25,7 @@ import clsx from "clsx";
 import { mutate } from "swr";
 import { useMutation } from "@/hooks/use-mutation";
 import { useAuth } from "@/hooks/use-auth";
+import { mutateFirstKey } from "@/lib/utils";
 
 export function Header() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export function Header() {
     onSuccess: () => {
       toast.success("User logged out!");
       mutate("/user/me");
-      mutate("/event");
+      mutateFirstKey("/event");
       navigate("/events");
     }
   });
@@ -55,7 +56,7 @@ export function Header() {
 
   const handleLogout = async () => {
     await logout();
-    mutate("/event");
+    mutateFirstKey("/event");
   };
 
   return (

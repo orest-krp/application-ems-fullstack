@@ -1,8 +1,8 @@
 import type { EventRequest, EventResponse } from "@ems-fullstack/utils";
 import { useMutation } from "./use-mutation";
-import { mutate } from "swr";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { mutateFirstKey } from "@/lib/utils";
 
 export function useCreateEvent() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export function useCreateEvent() {
     mutate: createEvent
   } = useMutation<EventRequest, EventResponse>("/event", "POST", {
     onSuccess(data) {
-      mutate("/event");
+      mutateFirstKey("/event");
       navigate(`/events/${data.id}`);
       toast.success("Event has been created succesfully");
     }
