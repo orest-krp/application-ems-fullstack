@@ -12,6 +12,12 @@ COPY packages ./packages
 
 RUN pnpm install
 
+WORKDIR /app/apps/api
+
+RUN npx prisma generate
+
+WORKDIR /app/apps
+
 RUN pnpm build
 
 WORKDIR /app/apps/api
@@ -19,8 +25,8 @@ WORKDIR /app/apps/api
 EXPOSE 8000
 
 CMD ["sh", "-c", "\
-    echo 'Running generate...' && \
-    pnpm run generate || echo 'Generate failed, continuing...' && \
+    echo 'Running push to db...' && \
+    pnpm run push || echo 'Generate failed, continuing...' && \
     echo 'Running seed...' && \
     pnpm run seed || echo 'Seed failed, continuing...' && \
     echo 'Starting dev server...' && \
