@@ -8,7 +8,7 @@ export type UseApiGetResult<T> =
       mutate: () => void;
     }
   | {
-      data: null;
+      data: T | null;
       isLoading: true;
       error: null;
       mutate: () => void;

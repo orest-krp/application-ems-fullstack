@@ -26,18 +26,18 @@ export class AllExceptionsFilter implements ExceptionFilter {
         messages = [res];
         error = exception.name;
       } else if (typeof res === 'object' && res !== null) {
-        const r = res as Partial<FetchError> & {
+        const errorResponse = res as Partial<FetchError> & {
           message?: string | string[];
         };
 
-        error = r.error ?? exception.name;
+        error = errorResponse.error ?? exception.name;
 
-        if (Array.isArray(r.messages)) {
-          messages = r.messages;
-        } else if (Array.isArray(r.message)) {
-          messages = r.message;
-        } else if (typeof r.message === 'string') {
-          messages = [r.message];
+        if (Array.isArray(errorResponse.messages)) {
+          messages = errorResponse.messages;
+        } else if (Array.isArray(errorResponse.message)) {
+          messages = errorResponse.message;
+        } else if (typeof errorResponse.message === 'string') {
+          messages = [errorResponse.message];
         }
       }
     } else if (exception instanceof ValidationError) {

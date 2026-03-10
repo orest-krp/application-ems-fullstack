@@ -16,6 +16,7 @@ async function bootstrap() {
     .setTitle('Event Management API')
     .setDescription('EMS API')
     .setVersion('1.0')
+    .addBearerAuth()
     .addCookieAuth('refreshToken')
     .addCookieAuth('accessToken')
     .build();

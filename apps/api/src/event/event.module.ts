@@ -5,11 +5,13 @@ import { PrismaService } from 'src/prisma.service';
 import { JWTProviders } from 'src/utils/constants';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { EventDetailsService } from './event-details.service';
 
 @Module({
   imports: [],
   providers: [
     EventService,
+    EventDetailsService,
     PrismaService,
     {
       provide: JWTProviders.EVENT,

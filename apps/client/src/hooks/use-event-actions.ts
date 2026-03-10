@@ -1,7 +1,4 @@
-import type {
-  EventApiRequestDto,
-  ParticipantWithUser
-} from "@ems-fullstack/utils";
+import type { EventRequest, ParticipantWithUser } from "@ems-fullstack/utils";
 import { useMutation } from "@/hooks/use-mutation";
 import { toast } from "sonner";
 import { mutate } from "swr";
@@ -12,8 +9,9 @@ export function useEventActions(eventId: string | null, token?: string) {
   const {
     mutate: editEvent,
     error: editEventError,
-    setError: setEventError
-  } = useMutation<EventApiRequestDto>(`/event/${eventId}`, "PUT", {
+    setError: setEventError,
+    loading: editEventLoading
+  } = useMutation<EventRequest>(`/event/${eventId}`, "PUT", {
     onSuccess: () => {
       toast.success("Event has been edited succesfully");
       mutate("/event");
@@ -21,7 +19,11 @@ export function useEventActions(eventId: string | null, token?: string) {
     }
   });
 
-  const { mutate: joinEvent } = useMutation<ParticipantWithUser>(
+  const {
+    mutate: joinEvent,
+    loading: joinEventLoading,
+    error: joinEventError
+  } = useMutation<ParticipantWithUser>(
     `/event/${eventId}/join${token ? `?token=${token}` : ""}`,
     "POST",
     {
@@ -36,20 +38,18 @@ export function useEventActions(eventId: string | null, token?: string) {
     }
   );
 
-  const { mutate: leaveEvent } = useMutation<ParticipantWithUser>(
-    `/event/${eventId}/join`,
-    "DELETE",
-    {
+  const { mutate: leaveEvent, loading: leaveEventloading } =
+    useMutation<ParticipantWithUser>(`/event/${eventId}/join`, "DELETE", {
       onSuccess: () => {
         toast.success("User has been leaved");
+        navigate("/events");
         mutate("/event");
         mutate(`/event/${eventId}`);
       },
       onError: (error) => {
         toast.error(error.messages[0]);
       }
-    }
-  );
+    });
 
   const { mutate: deleteEvent } = useMutation<ParticipantWithUser>(
     `/event/${eventId}`,
@@ -69,10 +69,14 @@ export function useEventActions(eventId: string | null, token?: string) {
 
   return {
     editEventError,
+    joinEventError,
     editEvent,
     setEventError,
     joinEvent,
     leaveEvent,
+    joinEventLoading,
+    leaveEventloading,
+    editEventLoading,
     deleteEvent
   };
 }

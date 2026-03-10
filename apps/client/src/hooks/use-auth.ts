@@ -1,4 +1,4 @@
-import type { LoginUserDTO, UserResponseDTO } from "@ems-fullstack/utils";
+import type { LoginUser, UserResponse } from "@ems-fullstack/utils";
 import { useApiGet } from "./use-api-get";
 import { useMutation } from "./use-mutation";
 import { toast } from "sonner";
@@ -6,13 +6,13 @@ import { mutate } from "swr";
 import { useNavigate } from "react-router-dom";
 
 export function useAuth() {
-  const user = useApiGet<UserResponseDTO>("/user/me");
+  const user = useApiGet<UserResponse>("/user/me");
   const navigate = useNavigate();
   const {
     mutate: login,
     error: loginError,
     setError: setLoginError
-  } = useMutation<LoginUserDTO>(
+  } = useMutation<LoginUser>(
     "/auth/login",
     "POST",
     {

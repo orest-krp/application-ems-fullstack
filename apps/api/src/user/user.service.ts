@@ -6,12 +6,13 @@ import {
 
 import argon2 from 'argon2';
 import { PrismaService } from 'src/prisma.service';
-import { RegisterUserDto, UserResponseDTO } from '@ems-fullstack/utils';
+import { UserResponseDto } from 'src/dto/event.dto';
+import { RegisterUserDto } from 'src/dto/auth.dto';
 
 @Injectable()
 export class UserService {
   constructor(private prismaService: PrismaService) {}
-  async create(user: RegisterUserDto): Promise<UserResponseDTO> {
+  async create(user: RegisterUserDto): Promise<UserResponseDto> {
     const isUserExist = Boolean(await this.findByEmail(user.email));
 
     if (isUserExist) {
@@ -38,7 +39,7 @@ export class UserService {
     });
   }
 
-  async me(userId: string): Promise<UserResponseDTO> {
+  async me(userId: string): Promise<UserResponseDto> {
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },
       omit: { password: true, updatedAt: true },

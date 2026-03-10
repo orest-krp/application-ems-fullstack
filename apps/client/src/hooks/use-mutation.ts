@@ -3,32 +3,32 @@ import { authfetcher, fetcher } from "@/lib/fetcher";
 import type { FetchError } from "@ems-fullstack/utils";
 import type { Method } from "axios";
 
-interface UseMutationOptions<T> {
-  onSuccess?: (data: T) => void;
+interface UseMutationOptions<Res> {
+  onSuccess?: (data: Res) => void;
   onError?: (error: FetchError) => void;
   onFinish?: () => void;
 }
 
-export function useMutation<T>(
+export function useMutation<T, Res = any>(
   endpoint: string,
   method: Method,
-  options?: UseMutationOptions<T>,
+  options?: UseMutationOptions<Res>,
   isAuth = true
 ) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<FetchError | null>(null);
 
   const mutate = useCallback(
-    async (event?: T) => {
+    async (mutatioData?: T) => {
       setLoading(true);
       setError(null);
 
       try {
         let data;
         if (isAuth) {
-          data = await authfetcher<T>(endpoint, event, method);
+          data = await authfetcher<Res>(endpoint, mutatioData, method);
         } else {
-          data = await fetcher<T>(endpoint, event, method);
+          data = await fetcher<Res>(endpoint, mutatioData, method);
         }
         if (options?.onSuccess) {
           options?.onSuccess(data);

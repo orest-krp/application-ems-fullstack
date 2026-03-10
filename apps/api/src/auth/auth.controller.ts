@@ -15,14 +15,13 @@ import { RefreshAuthGuard } from './guards/refresh-auth.quard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { setTokens } from 'src/utils/helpers';
 import { YupValidationPipe } from 'src/validation.pipe';
+import { type AuthReq, registerUserShema } from '@ems-fullstack/utils';
 import {
-  type AuthReq,
-  registerUserShema,
-  type RegisterUserDto,
-  UserResponseDTO,
+  LogOutResponseDto,
+  RegisterUserDto,
   TokensResponseDto,
-  type LogOutResponseDto,
-} from '@ems-fullstack/utils';
+} from 'src/dto/auth.dto';
+import { UserResponseDto } from 'src/dto/event.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -32,7 +31,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a new user' })
   @UsePipes(new YupValidationPipe(registerUserShema))
   @Post('register')
-  async register(@Body() user: RegisterUserDto): Promise<UserResponseDTO> {
+  async register(@Body() user: RegisterUserDto): Promise<UserResponseDto> {
     return await this.authService.register(user);
   }
 

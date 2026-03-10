@@ -54,11 +54,12 @@ export function Header() {
 
   const handleLogout = async () => {
     await logout();
+    mutate("/event");
   };
 
   return (
-    <header className="border-b bg-background px-4 md:px-8">
-      <div className="container mx-auto flex items-center justify-between py-4">
+    <header className="border-b bg-background px-4 md:px-8 w-full">
+      <div className="flex items-center justify-between w-full py-4">
         <h1
           onClick={() => navigate("/events")}
           className="text-2xl font-bold cursor-pointer"

@@ -1,24 +1,30 @@
 import {
-  type EventDetailsResponseDto,
-  type UserResponseDTO
+  type EventCardDetailsResponse,
+  type EventDetailsResponse,
+  type UserResponse
 } from "@ems-fullstack/utils";
 import { useApiGet } from "./use-api-get";
 
 export function useEventPermissions(
-  eventDetails: EventDetailsResponseDto | null
+  event: EventDetailsResponse | EventCardDetailsResponse | null
 ) {
-  const { data: user } = useApiGet<UserResponseDTO>("/user/me");
+  const { data: user } = useApiGet<UserResponse>("/user/me");
 
-  const isOrganizer = eventDetails?.organizerId === user?.id;
+  const isOrganizer = event?.organizerId === user?.id;
   const isJoined =
-    eventDetails?.participants.some((p) => p.userId === user?.id) ?? false;
+    event?.participants.some((p) => p.userId === user?.id) ?? false;
 
-  const isFull = eventDetails?.capacity
-    ? eventDetails.participants.length >= eventDetails.capacity
+  const isFull = event?.capacity
+    ? event.participants.length >= event.capacity
     : false;
+
+  const participants = event?.capacity
+    ? `${event.participants.length}/${event.capacity} participants`
+    : "Unlimited";
 
   return {
     isOrganizer,
+    participants,
     isJoined,
     isFull,
     user

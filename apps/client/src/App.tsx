@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import { Spinner } from "./components/spinner";
 import { NoAuthorized } from "./components/no-authorized";
 import { useAuth } from "./hooks/use-auth";
+import { Invite } from "./pages/invite";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const {
@@ -35,6 +36,7 @@ export default function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/events/:eventId/join" element={<Invite />} />
 
         <Route
           path="/create-event"

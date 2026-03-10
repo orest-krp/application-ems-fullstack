@@ -1,7 +1,7 @@
 import {
   eventSchema,
   EventVisibility,
-  type EventDetailsResponseDto,
+  type EventDetailsResponse,
   type EventRequestForm
 } from "@ems-fullstack/utils";
 import { useForm } from "react-hook-form";
@@ -30,7 +30,7 @@ export function useEventForm() {
     defaultValues: defaultValues
   });
 
-  const resetValues = useCallback((event: EventDetailsResponseDto | null) => {
+  const resetValues = useCallback((event: EventDetailsResponse | null) => {
     if (event) {
       reset({
         title: event.title,

@@ -9,7 +9,7 @@ import {
   CardDescription
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { loginUserSchema, type LoginUserDTO } from "@ems-fullstack/utils";
+import { loginUserSchema, type LoginUser } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
 import { AuthFormInput } from "@/components/ui/auth-form-input";
 import { ErrorMessage } from "@/components/ui/error-message";
@@ -22,12 +22,12 @@ export function Login() {
     setLoginError
   } = useAuth();
 
-  const { handleSubmit, control } = useForm<LoginUserDTO>({
+  const { handleSubmit, control } = useForm<LoginUser>({
     resolver: useYupValidationResolver(loginUserSchema),
     defaultValues: { email: "", password: "" }
   });
 
-  const onSubmit = async (data: LoginUserDTO) => {
+  const onSubmit = async (data: LoginUser) => {
     setLoginError(null);
     await login(data);
   };

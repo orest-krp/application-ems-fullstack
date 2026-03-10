@@ -1,4 +1,4 @@
-import type { EventApiRequestDto } from "@ems-fullstack/utils";
+import type { EventRequest, EventResponse } from "@ems-fullstack/utils";
 import { useMutation } from "./use-mutation";
 import { mutate } from "swr";
 import { toast } from "sonner";
@@ -10,10 +10,10 @@ export function useCreateEvent() {
     error,
     setError,
     mutate: createEvent
-  } = useMutation<EventApiRequestDto>("/event", "POST", {
-    onSuccess() {
+  } = useMutation<EventRequest, EventResponse>("/event", "POST", {
+    onSuccess(data) {
       mutate("/event");
-      navigate("/events");
+      navigate(`/events/${data.id}`);
       toast.success("Event has been created succesfully");
     }
   });

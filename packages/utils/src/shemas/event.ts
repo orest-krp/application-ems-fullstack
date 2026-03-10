@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import dayjs from "dayjs";
-import { EventVisibility } from "../dto/events.js";
+import { EventVisibility } from "../data/events.js";
 
 export const eventSchema = yup
   .object({

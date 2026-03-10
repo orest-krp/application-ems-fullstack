@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { Link } from "react-router-dom";
-import { registerUserShema, type RegisterUserDto } from "@ems-fullstack/utils";
+import { registerUserShema, type RegisterUser } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
 import { AuthFormInput } from "@/components/ui/auth-form-input";
 import { ErrorMessage } from "@/components/ui/error-message";
@@ -23,12 +23,12 @@ export function Register() {
     setRegisterError
   } = useAuth();
 
-  const { handleSubmit, control } = useForm<RegisterUserDto>({
+  const { handleSubmit, control } = useForm<RegisterUser>({
     resolver: useYupValidationResolver(registerUserShema),
     defaultValues: { name: "", email: "", password: "" }
   });
 
-  const onSubmit = async (data: RegisterUserDto) => {
+  const onSubmit = async (data: RegisterUser) => {
     setRegisterError(null);
     await register(data);
   };

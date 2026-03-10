@@ -1,17 +1,17 @@
 import type { UseApiGetResult } from "@/lib/types";
-import type { EventDetailsResponseDto } from "@ems-fullstack/utils";
+import type { EventDetailsResponse } from "@ems-fullstack/utils";
 import { useApiGet } from "./use-api-get";
 import { useEventPermissions } from "./use-event-permisions";
 
 interface UseEventDetailsResult {
-  eventDetails: UseApiGetResult<EventDetailsResponseDto>;
+  eventDetails: UseApiGetResult<EventDetailsResponse>;
   isOrganizer: boolean;
   isJoined: boolean;
   isFull: boolean;
 }
 
 export function useEventDetails(eventId: string | null): UseEventDetailsResult {
-  const eventDetails = useApiGet<EventDetailsResponseDto>(`/event/${eventId}`);
+  const eventDetails = useApiGet<EventDetailsResponse>(`/event/${eventId}`);
 
   const { isOrganizer, isJoined, isFull } = useEventPermissions(
     eventDetails.data

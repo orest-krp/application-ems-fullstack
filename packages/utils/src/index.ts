@@ -1,7 +1,7 @@
-export * from "./dto/auth.js";
-export * from "./dto/common.js";
-export * from "./dto/events.js";
-export * from "./dto/users.js";
+export * from "./data/auth.js";
+export * from "./data/common.js";
+export * from "./data/events.js";
+export * from "./data/users.js";
 
 export * from "./shemas/auth.js";
 export * from "./shemas/event.js";

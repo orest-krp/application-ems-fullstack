@@ -1,4 +1,10 @@
-import { AlertCircle, Lock, SearchX, ServerCrash } from "lucide-react";
+import {
+  AlertCircle,
+  Lock,
+  SearchX,
+  ServerCrash,
+  TriangleAlert
+} from "lucide-react";
 import {
   Empty,
   EmptyHeader,
@@ -25,13 +31,15 @@ export function ErrorState({ error }: ErrorStateProps) {
   const getErrorIcon = () => {
     switch (error.statusCode) {
       case 401:
-        return <Lock className="h-30 w-30 text-muted-foreground" />;
+        return <Lock className="h-24 w-24 text-destructive" />;
       case 404:
-        return <SearchX className="h-30 w-30 text-muted-foreground" />;
+        return <SearchX className="h-24 w-24 text-destructive" />;
       case 500:
-        return <ServerCrash className="h-30 w-30 text-destructive" />;
+        return <ServerCrash className="h-24 w-24 text-destructive" />;
+      case 403:
+        return <TriangleAlert className="h-24 w-24 text-destructive" />;
       default:
-        return <AlertCircle className="h-30 w-30 text-destructive" />;
+        return <AlertCircle className="h-24 w-24 text-destructive" />;
     }
   };
 
@@ -43,7 +51,7 @@ export function ErrorState({ error }: ErrorStateProps) {
         <EmptyTitle className="text-destructive text-4xl">
           {error.statusCode}
         </EmptyTitle>
-        <EmptyDescription className="text-xl">
+        <EmptyDescription className="text-lg">
           {error.messages.map((msg, idx) => (
             <p key={idx}>{msg}</p>
           ))}

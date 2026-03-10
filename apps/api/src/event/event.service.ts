@@ -1,15 +1,14 @@
-import { EventApiRequestDto } from '@ems-fullstack/utils';
 import {
+  BadRequestException,
   ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { EventVisibility } from 'generated/prisma/enums';
-import { EventDetailsApiResponseDTO } from 'src/dto/event.dto';
+import { EventRequestDto } from 'src/dto/event.dto';
 import { PrismaService } from 'src/prisma.service';
 import { JWTProviders } from 'src/utils/constants';
 
@@ -17,10 +16,9 @@ import { JWTProviders } from 'src/utils/constants';
 export class EventService {
   constructor(
     private prismaService: PrismaService,
-    private configService: ConfigService,
     @Inject(JWTProviders.EVENT) private readonly accessEventJwt: JwtService,
   ) {}
-  async createEvent(event: EventApiRequestDto, organizerId: string) {
+  async createEvent(event: EventRequestDto, organizerId: string) {
     return await this.prismaService.event.create({
       data: {
         ...event,
@@ -109,20 +107,21 @@ export class EventService {
   }
 
   async getEventToken(token: string) {
-    const { eventId } = await this.accessEventJwt.verifyAsync<{
+    const toen = await this.accessEventJwt.verifyAsync<{
       eventId: string;
     }>(token);
 
-    return eventId;
+    return toen.eventId;
   }
 
   async editEvent(
-    event: EventApiRequestDto,
+    event: EventRequestDto,
     organizerId: string,
     eventId: string,
   ) {
     const existingEvent = await this.prismaService.event.findUnique({
       where: { id: eventId },
+      include: { participants: true },
     });
 
     if (!existingEvent) {
@@ -130,7 +129,13 @@ export class EventService {
     }
 
     if (existingEvent.organizerId !== organizerId) {
-      throw new ForbiddenException('Only organizator can edit events');
+      throw new ForbiddenException('Only organizer can edit events');
+    }
+
+    if (event.capacity && event.capacity < existingEvent.participants.length) {
+      throw new BadRequestException(
+        `Capacity cannot be less than current participants (${existingEvent.participants.length})`,
+      );
     }
 
     return await this.prismaService.event.update({
@@ -138,7 +143,6 @@ export class EventService {
       data: { ...event },
     });
   }
-
   async deleteEvent(organizerId: string, eventId: string) {
     const existingEvent = await this.prismaService.event.findUnique({
       where: { id: eventId },
@@ -157,49 +161,80 @@ export class EventService {
     });
   }
 
-  async getAllPublic() {
-    return await this.prismaService.event.findMany({
-      where: { visibility: EventVisibility.PUBLIC },
-    });
-  }
+  async getAllAccessible(
+    userId?: string,
+    page: number = 1,
+    pageSize: number = 10,
+    search?: string,
+  ) {
+    const skip = (page - 1) * pageSize;
 
-  async generateAccessEventToken(email: string) {
-    const payload = { email };
+    const searchFilter: any = search
+      ? {
+          OR: [
+            { title: { contains: search, mode: 'insensitive' as const } },
+            { description: { contains: search, mode: 'insensitive' as const } },
+          ],
+        }
+      : {};
 
-    const accessEventToken = await this.accessEventJwt.signAsync(payload);
-
-    return accessEventToken;
-  }
-
-  async getEventDetails(
-    eventId: string,
-    userId: string | null,
-    email: string | null,
-  ): Promise<EventDetailsApiResponseDTO> {
-    const eventDetails = await this.prismaService.event.findUnique({
-      where: { id: eventId },
-      include: {
-        participants: {
-          include: { user: { omit: { updatedAt: true, password: true } } },
+    const whereClause = {
+      AND: [
+        searchFilter,
+        {
+          OR: [
+            { visibility: EventVisibility.PUBLIC },
+            ...(userId
+              ? [
+                  { organizerId: userId },
+                  { participants: { some: { userId } } },
+                ]
+              : []),
+          ],
         },
+      ],
+    };
+
+    const events = await this.prismaService.event.findMany({
+      where: whereClause,
+      include: { participants: true },
+      skip,
+      take: pageSize,
+      orderBy: { dateTime: 'desc' },
+    });
+
+    const total = await this.prismaService.event.count({
+      where: whereClause,
+    });
+
+    return {
+      events,
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    };
+  }
+
+  async getMyEvents(userId?: string) {
+    return this.prismaService.event.findMany({
+      where: {
+        OR: [
+          ...(userId
+            ? [
+                { organizerId: userId },
+                {
+                  participants: {
+                    some: { userId },
+                  },
+                },
+              ]
+            : []),
+        ],
+      },
+      include: {
+        participants: true,
       },
     });
-
-    if (!eventDetails) {
-      throw new NotFoundException('Event is not found');
-    }
-
-    let invitationLink = `${this.configService.getOrThrow('frontendUrl')}/events/${eventId}/join`;
-
-    if (
-      eventDetails.visibility === EventVisibility.PRIVATE &&
-      eventDetails.organizerId === userId &&
-      email
-    ) {
-      const invitationToken = await this.generateAccessEventToken(email);
-      invitationLink += `?token=${invitationToken}`;
-    }
-
-    return { ...eventDetails, invitationLink };
   }
 }
