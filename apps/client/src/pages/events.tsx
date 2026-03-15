@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { EventsSearch } from "@/components/events/events-search";
 import { EventsPagination } from "@/components/events/events-pagination";
@@ -8,24 +7,19 @@ import { Loading } from "@/components/loading";
 import { useSearchEvents } from "@/hooks/use-search-events";
 import { useEventsStore } from "@/store/event-store";
 import { Eventslist } from "@/components/events/events-list";
+import { useDebounce } from "@/hooks/use-debounce";
+import { EventsTags } from "@/components/events/events-tags";
 
 export function Events() {
-  const { page, pageSize, search } = useEventsStore();
+  const { page, pageSize, search, tags } = useEventsStore();
 
-  const [debouncedSearch, setDebouncedSearch] = useState(search);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 300);
-
-    return () => clearTimeout(handler);
-  }, [search]);
+  const debouncedSearch = useDebounce(search);
 
   const { data, isLoading, error } = useSearchEvents(
     page,
     pageSize,
-    debouncedSearch
+    debouncedSearch,
+    tags
   );
 
   if (error) return <ErrorState error={error} />;
@@ -37,15 +31,19 @@ export function Events() {
         title="Discover Events"
         subtitle="Find and join exciting events happening around you"
       />
-
-      <EventsSearch />
+      <div className="flex gap-4 flex-col sm:flex-row">
+        <EventsSearch />
+        <EventsTags />
+      </div>
 
       {data.events.length === 0 ? (
         <NoEvents />
       ) : (
         <>
           <Eventslist events={data.events} />
-          <EventsPagination totalPages={data.totalPages} />
+          {data.totalPages > 1 && (
+            <EventsPagination totalPages={data.totalPages} />
+          )}
         </>
       )}
     </div>

@@ -1,25 +1,21 @@
-import type { EventCardResponse } from "@ems-fullstack/utils";
+import type { EventSearchResponse } from "@ems-fullstack/utils";
 import { useApiGet } from "./use-api-get";
 import type { UseApiGetResult } from "@/lib/types";
-
-type SearchEventsResponse = {
-  events: EventCardResponse[];
-  page: number;
-  pageSize: number;
-  total: number;
-  totalPages: number;
-};
 
 export function useSearchEvents(
   page: number,
   pageSize: number,
-  search: string
-): UseApiGetResult<SearchEventsResponse> {
-  const url = `/events?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}`;
+  search: string,
+  tags: string[]
+): UseApiGetResult<EventSearchResponse> {
+  const tagsParam =
+    tags.length > 0 ? `&tags=${encodeURIComponent(tags.join(","))}` : "";
 
-  return useApiGet<SearchEventsResponse>(
+  const url = `/events?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}${tagsParam}`;
+
+  return useApiGet<EventSearchResponse>(
     url,
-    ["events", page, pageSize, search],
+    ["events", page, pageSize, search, tags],
     {
       keepPreviousData: true,
       revalidateOnFocus: false,

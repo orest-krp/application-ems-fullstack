@@ -13,8 +13,10 @@ import {
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import { LoadingButton } from "../ui/loading-button";
+import { useEventActions } from "@/hooks/use-event-actions";
 
 type EventDetailsHeaderProps = {
+  eventId: string;
   title: string;
   user: UserResponse | null;
   isEdited: boolean;
@@ -22,32 +24,39 @@ type EventDetailsHeaderProps = {
   isJoined: boolean;
   isFull: boolean;
 
-  isDeleting?: boolean;
-  isJoining?: boolean;
-  isLeaving?: boolean;
-  isEditing?: boolean;
-
   onToggleEdit: () => void;
-  onDelete: () => void;
-  onJoin: () => void;
-  onLeave: () => void;
 };
 
 export function EventDetailsHeader({
+  eventId,
   title,
   user,
   isEdited,
   isOrganizer,
   isJoined,
   isFull,
-  isDeleting = false,
-  isJoining = false,
-  isLeaving = false,
-  onToggleEdit,
-  onDelete,
-  onJoin,
-  onLeave
+  onToggleEdit
 }: EventDetailsHeaderProps) {
+  const {
+    joinEvent,
+    leaveEvent,
+    deleteEvent,
+    joinEventLoading,
+    leaveEventloading,
+    deleteEventloading
+  } = useEventActions(eventId);
+  const onJoin = async () => {
+    await joinEvent();
+  };
+
+  const onLeave = async () => {
+    await leaveEvent();
+  };
+
+  const onDelete = async () => {
+    await deleteEvent();
+  };
+
   return (
     <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <CardTitle className="text-xl">
@@ -78,7 +87,7 @@ export function EventDetailsHeader({
                 <AlertDialogTrigger asChild>
                   <LoadingButton
                     variant="destructive"
-                    loading={isDeleting}
+                    loading={deleteEventloading}
                     loadingText="Deleting..."
                   >
                     <Delete className="mr-1 h-4 w-4" />
@@ -103,7 +112,7 @@ export function EventDetailsHeader({
                     <AlertDialogAction asChild>
                       <LoadingButton
                         variant="destructive"
-                        loading={isDeleting}
+                        loading={deleteEventloading}
                         loadingText="Deleting..."
                         onClick={onDelete}
                       >
@@ -117,7 +126,7 @@ export function EventDetailsHeader({
           ) : isJoined ? (
             <LoadingButton
               variant="destructive"
-              loading={isLeaving}
+              loading={leaveEventloading}
               loadingText="Leaving..."
               onClick={onLeave}
             >
@@ -126,7 +135,7 @@ export function EventDetailsHeader({
             </LoadingButton>
           ) : (
             <LoadingButton
-              loading={isJoining}
+              loading={joinEventLoading}
               loadingText="Joining..."
               onClick={onJoin}
               disabled={isFull}

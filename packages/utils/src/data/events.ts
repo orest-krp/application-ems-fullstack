@@ -66,5 +66,8 @@ export interface EventCardResponse extends EventResponse {
 export interface Tag {
   id: string;
   name: string;
-  eventId: string | null;
+}
+
+export interface TagsResponse {
+  tags: Tag[];
 }

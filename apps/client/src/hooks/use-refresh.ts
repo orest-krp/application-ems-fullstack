@@ -3,12 +3,14 @@ import { useEventsStore } from "@/store/event-store";
 import { mutate } from "swr";
 
 export function useRefresh() {
-  const { page, pageSize, search } = useEventsStore();
+  const { page, pageSize, search, tags } = useEventsStore();
 
   const refreshUser = () => mutate("/user/me", undefined, { revalidate: true });
 
   const refreshCurrentEvents = () => {
-    mutate(["events", page, pageSize, search], undefined, { revalidate: true });
+    mutate(["events", page, pageSize, search, tags], undefined, {
+      revalidate: true
+    });
     mutate("/events/me", undefined, { revalidate: true });
   };
 

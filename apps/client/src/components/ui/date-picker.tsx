@@ -21,7 +21,7 @@ import {
   type Path
 } from "react-hook-form";
 import { Field, FieldError } from "./field";
-import { FormFieldLabel } from "./field-label";
+import { FormFieldLabel } from "../form/form-field-label";
 import dayjs from "dayjs";
 
 interface FormDatePickerProps<

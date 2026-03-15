@@ -12,7 +12,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { Link } from "react-router-dom";
 import { registerUserShema, type RegisterUser } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
-import { AuthFormInput } from "@/components/ui/auth-form-input";
+import { AuthFormInput } from "@/components/form/auth-form-input";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { useAuth } from "@/hooks/use-auth";
 

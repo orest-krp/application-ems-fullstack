@@ -6,12 +6,12 @@ export function EventsSearch() {
   const { search, setSearch } = useEventsStore();
 
   return (
-    <div className="relative max-w-md">
+    <div className="relative w-full">
       <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
 
       <Input
         placeholder="Search events..."
-        className="pl-9"
+        className="pl-9 text-sm"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />

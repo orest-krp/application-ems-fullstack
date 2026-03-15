@@ -34,13 +34,24 @@ export const eventSchema = yup
       .required("Visibility is required"),
     tags: yup
       .array()
-      .of(yup.string().trim().min(1).defined())
-      .max(5, "Maximum 5 tags allowed")
       .optional()
-      .test("unique-tags", "Tags must be unique", (tags) => {
+      .max(5, "Maximum 5 tags allowed")
+      .test("tags-validation", "Tags are invalid", (tags) => {
         if (!tags) return true;
-        const normalized = tags.map((tag) => tag.toLowerCase());
-        return new Set(normalized).size === normalized.length;
+
+        for (const tag of tags) {
+          const trimmed = tag.trim();
+          if (!trimmed) return false;
+
+          if (!/[a-zA-Z]/.test(trimmed)) return false;
+
+          if (!/^[a-zA-Z0-9.-]+$/.test(trimmed)) return false;
+        }
+
+        const normalized = tags.map((tag) => tag.trim().toLowerCase());
+        if (new Set(normalized).size !== normalized.length) return false;
+
+        return true;
       })
   })
   .test("is-future-datetime", function (values) {
@@ -88,12 +99,23 @@ export const eventApiSchema = yup.object({
     .required(),
   tags: yup
     .array()
-    .of(yup.string().trim().min(1).defined())
-    .max(5, "Maximum 5 tags allowed")
     .optional()
-    .test("unique-tags", "Tags must be unique", (tags) => {
+    .max(5, "Maximum 5 tags allowed")
+    .test("tags-validation", "Tags are invalid", (tags) => {
       if (!tags) return true;
-      const normalized = tags.map((tag) => tag.toLowerCase());
-      return new Set(normalized).size === normalized.length;
+
+      for (const tag of tags) {
+        const trimmed = tag.trim();
+        if (!trimmed) return false;
+
+        if (!/[a-zA-Z]/.test(trimmed)) return false;
+
+        if (!/^[a-zA-Z0-9.-]+$/.test(trimmed)) return false;
+      }
+
+      const normalized = tags.map((tag) => tag.trim().toLowerCase());
+      if (new Set(normalized).size !== normalized.length) return false;
+
+      return true;
     })
 });

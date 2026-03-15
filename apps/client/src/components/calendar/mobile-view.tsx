@@ -1,7 +1,7 @@
 import { getEventsForDay, getWeekDays } from "@/lib/utils";
 import type { EventCardResponse } from "@ems-fullstack/utils";
 import dayjs from "dayjs";
-import { NavLink } from "react-router-dom";
+import { EventsList } from "./events-list";
 
 interface MobileViewProps {
   events: EventCardResponse[];
@@ -24,20 +24,7 @@ export function MobileView({ currentDate, events }: MobileViewProps) {
                 {day.format("D MMM")}
               </span>
             </div>
-
-            {dayEvents.length === 0 ? (
-              <span className="text-sm text-muted-foreground">No events</span>
-            ) : (
-              dayEvents.map((event: any) => (
-                <NavLink
-                  key={event.id}
-                  to={`/events/${event.id}`}
-                  className="bg-primary/20 rounded px-2 py-1 text-sm"
-                >
-                  {dayjs(event.dateTime).format("HH:mm")} — {event.title}
-                </NavLink>
-              ))
-            )}
+            <EventsList dayEvents={dayEvents} />
           </div>
         );
       })}

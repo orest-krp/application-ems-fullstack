@@ -1,6 +1,6 @@
 import type { EventCardResponse } from "@ems-fullstack/utils";
 import dayjs from "dayjs";
-import { NavLink } from "react-router-dom";
+import { EventsList } from "./events-list";
 
 interface MonthViewProps {
   events: EventCardResponse[];
@@ -61,15 +61,7 @@ export function MonthView({ currentDate, events }: MonthViewProps) {
                       No events
                     </span>
                   ) : (
-                    dayEvents.map((event) => (
-                      <NavLink
-                        key={event.id}
-                        to={`/events/${event.id}`}
-                        className="bg-primary/20 rounded px-2 py-1 text-sm truncate"
-                      >
-                        {dayjs(event.dateTime).format("HH:mm")} — {event.title}
-                      </NavLink>
-                    ))
+                    <EventsList dayEvents={dayEvents} />
                   )}
                 </div>
               </div>

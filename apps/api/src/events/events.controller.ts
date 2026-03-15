@@ -103,6 +103,7 @@ export class EventsController {
     @Query('page') page?: string,
     @Query('pageSize') pageSize?: string,
     @Query('search') search?: string,
+    @Query('tags') tags?: string,
   ): Promise<{
     events: EventCardResponseDto[];
     page: number;
@@ -113,10 +114,17 @@ export class EventsController {
     const pageNumber = page ? parseInt(page, 10) : 1;
     const pageSizeNumber = pageSize ? parseInt(pageSize, 10) : 10;
 
+    const tagList =
+      tags
+        ?.split(',')
+        .map((t) => t.trim())
+        .filter(Boolean) || [];
+
     return await this.eventService.getAllAccessible(
       pageNumber,
       pageSizeNumber,
       search,
+      tagList,
     );
   }
 

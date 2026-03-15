@@ -117,6 +117,11 @@ export class EventDetailsResponseDto extends EventResponseDto {
   tags: Tag[];
 }
 
+export class TagsResponseDto {
+  @ApiProperty()
+  tags: Tag[];
+}
+
 export class EventCardResponseDto extends EventResponseDto {
   @ApiProperty()
   participants: Participant[];

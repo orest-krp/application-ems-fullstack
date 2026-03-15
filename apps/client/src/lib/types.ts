@@ -22,3 +22,8 @@ export type UseApiGetResult<T> =
       error: FetchError;
       mutate: () => void;
     };
+
+export interface TagOption {
+  label: string;
+  value: string;
+}

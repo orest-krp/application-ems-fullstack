@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { loginUserSchema, type LoginUser } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
-import { AuthFormInput } from "@/components/ui/auth-form-input";
+import { AuthFormInput } from "@/components/form/auth-form-input";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { useAuth } from "@/hooks/use-auth";
 

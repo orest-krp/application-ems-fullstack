@@ -10,15 +10,33 @@ import { useAuth } from "@/hooks/use-auth";
 import { useEventActions } from "@/hooks/use-event-actions";
 import { useEventDetails } from "@/hooks/use-event-details";
 import { useEventForm } from "@/hooks/use-event-form";
-import { formatDate, mergeDateTime } from "@/lib/utils";
-import { EventVisibility, type EventRequestForm } from "@ems-fullstack/utils";
-import { ArrowLeft, Calendar, MapPin } from "lucide-react";
+import { formatDate, getTagColor, mergeDateTime } from "@/lib/utils";
+import {
+  EventVisibility,
+  type EventRequestForm,
+  type Tag
+} from "@ems-fullstack/utils";
+import {
+  ArrowLeft,
+  Calendar,
+  Eye,
+  FileText,
+  MapPin,
+  Tag as TagIcon
+} from "lucide-react";
 
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { useMounted } from "@/hooks/use-mouted";
 import { EventDetailsHeader } from "@/components/events-details/event-details-header";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle
+} from "@/components/ui/item";
 
 export function EventDetails() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -38,22 +56,13 @@ export function EventDetails() {
     isFull
   } = useEventDetails(eventId);
 
-  const {
-    editEvent,
-    setEventError,
-    editEventError,
-    joinEvent,
-    leaveEvent,
-    deleteEvent,
-    editEventLoading,
-    joinEventLoading,
-    leaveEventloading,
-    deleteEventloading
-  } = useEventActions(eventId);
+  const { editEvent, setEventError, editEventError, editEventLoading } =
+    useEventActions(eventId);
 
   const [isEdited, setEdited] = useState(false);
 
-  const { control, handleSubmit, resetValues, isDirty } = useEventForm();
+  const { control, handleSubmit, resetValues, isDirty } =
+    useEventForm("onChange");
 
   useEffect(() => {
     if (event) resetValues(event);
@@ -85,18 +94,6 @@ export function EventDetails() {
     [editEvent]
   );
 
-  const onJoin = async () => {
-    await joinEvent();
-  };
-
-  const onLeave = async () => {
-    await leaveEvent();
-  };
-
-  const onDelete = async () => {
-    await deleteEvent();
-  };
-
   const isFirstLoad = isLoading || (isValidating && !isMouted);
 
   if (isFirstLoad) return <Loading />;
@@ -119,6 +116,7 @@ export function EventDetails() {
         <Card>
           <EventDetailsHeader
             title={event.title}
+            eventId={event.id}
             user={user}
             isEdited={isEdited}
             isOrganizer={isOrganizer}
@@ -128,12 +126,6 @@ export function EventDetails() {
               setEdited((value) => !value);
               resetValues(event);
             }}
-            onDelete={onDelete}
-            onJoin={onJoin}
-            onLeave={onLeave}
-            isDeleting={deleteEventloading}
-            isJoining={joinEventLoading}
-            isLeaving={leaveEventloading}
           />
           <CardContent className="space-y-6">
             {isEdited ? (
@@ -158,29 +150,84 @@ export function EventDetails() {
               </form>
             ) : (
               <>
-                {event?.description && <p>{event.description}</p>}
+                <div className="flex w-full flex-col gap-3">
+                  {event?.description && (
+                    <Item size="sm">
+                      <ItemMedia variant="icon">
+                        <FileText />
+                      </ItemMedia>
+                      <ItemContent>
+                        <ItemTitle>Description</ItemTitle>
+                        <ItemDescription>{event.description}</ItemDescription>
+                      </ItemContent>
+                    </Item>
+                  )}
 
-                <div className="flex items-center gap-2">
-                  <Calendar size={18} />
-                  {formatDate(event.dateTime)}
+                  <Item size="sm">
+                    <ItemMedia variant="icon">
+                      <Calendar />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>Date</ItemTitle>
+                      <ItemDescription>
+                        {formatDate(event.dateTime)}
+                      </ItemDescription>
+                    </ItemContent>
+                  </Item>
+
+                  <Item size="sm">
+                    <ItemMedia variant="icon">
+                      <MapPin />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>Location</ItemTitle>
+                      <ItemDescription>{event?.location}</ItemDescription>
+                    </ItemContent>
+                  </Item>
+
+                  <Item size="sm">
+                    <ItemMedia variant="icon">
+                      <Eye />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>Visibility</ItemTitle>
+                      <ItemDescription>
+                        <Badge
+                          variant={
+                            event?.visibility === EventVisibility.PUBLIC
+                              ? "secondary"
+                              : "destructive"
+                          }
+                        >
+                          {event?.visibility === EventVisibility.PUBLIC
+                            ? "Public"
+                            : "Private"}
+                        </Badge>
+                      </ItemDescription>
+                    </ItemContent>
+                  </Item>
+                  {event?.tags?.length > 0 && (
+                    <Item size="sm">
+                      <ItemMedia variant="icon">
+                        <TagIcon />
+                      </ItemMedia>
+                      <ItemContent>
+                        <ItemTitle>Tags</ItemTitle>
+                        <ItemDescription className="flex flex-wrap gap-2">
+                          {event.tags.map((tag: Tag) => (
+                            <Badge
+                              key={tag.id}
+                              className={getTagColor(tag.name)}
+                              variant="outline"
+                            >
+                              {tag.name}
+                            </Badge>
+                          ))}
+                        </ItemDescription>
+                      </ItemContent>
+                    </Item>
+                  )}
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <MapPin size={18} />
-                  {event?.location}
-                </div>
-
-                <Badge
-                  variant={
-                    event?.visibility === EventVisibility.PUBLIC
-                      ? "secondary"
-                      : "destructive"
-                  }
-                >
-                  {event?.visibility === EventVisibility.PUBLIC
-                    ? "Public"
-                    : "Private"}
-                </Badge>
               </>
             )}
 

@@ -20,23 +20,6 @@ model User {
   joinedEvents    Participant[]
 }
 
-model Event {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  dateTime    DateTime
-  location    String
-  capacity    Int?
-  organizerId String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  organizer    User            @relation("OrganizerEvents", fields: [organizerId], references: [id])
-  participants Participant[]
-  tags         Tag[]
-  visibility   EventVisibility @default(PUBLIC)
-}
-
 model Participant {
   id       String   @id @default(cuid())
   userId   String
@@ -54,9 +37,25 @@ model Tag {
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  eventId   String?
 
-  event Event? @relation(fields: [eventId], references: [id])
+  events Event[] @relation("EventTags")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  dateTime    DateTime
+  location    String
+  capacity    Int?
+  organizerId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizer    User            @relation("OrganizerEvents", fields: [organizerId], references: [id])
+  participants Participant[]
+  tags         Tag[]           @relation("EventTags")
+  visibility   EventVisibility @default(PUBLIC)
 }
 
 enum EventVisibility {

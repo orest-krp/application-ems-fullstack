@@ -1,3 +1,4 @@
+import type { EventCardResponse } from "@ems-fullstack/utils";
 import { clsx, type ClassValue } from "clsx";
 import dayjs from "dayjs";
 import { mutate } from "swr";
@@ -31,10 +32,30 @@ export const getWeekDays = (currentDate: dayjs.Dayjs) => {
   return days;
 };
 
-export const getEventsForDay = (events: any[], day: dayjs.Dayjs) => {
+export const getEventsForDay = (
+  events: EventCardResponse[],
+  day: dayjs.Dayjs
+) => {
   return events.filter((event) => dayjs(event.dateTime).isSame(day, "day"));
 };
 
 export const mutateFirstKey = (firstKey: string) => {
   mutate((key) => Array.isArray(key) && key[0] === firstKey);
 };
+
+const chipColors = [
+  "bg-red-200 text-red-800",
+  "bg-green-200 text-green-800",
+  "bg-blue-200 text-blue-800",
+  "bg-yellow-200 text-yellow-800",
+  "bg-purple-200 text-purple-800",
+  "bg-pink-200 text-pink-800",
+  "bg-orange-200 text-orange-800"
+];
+
+export function getTagColor(tag: string) {
+  const index = tag
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return chipColors[index % chipColors.length];
+}

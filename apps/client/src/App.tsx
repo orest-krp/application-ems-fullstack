@@ -3,16 +3,16 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import { NoAuthorized } from "./components/no-authorized";
 import { useAuth } from "./hooks/use-auth";
-import { Loading } from "./components/loading";
 import { Suspense } from "react";
 import { lazyPage } from "./components/lazy-page";
+import { LoadingPage } from "./pages/loading";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const {
     user: { data: user, isLoading }
   } = useAuth();
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <LoadingPage />;
   if (!user) return <NoAuthorized />;
 
   return children;
@@ -41,7 +41,7 @@ export default function App() {
           <Route
             path="/events"
             element={
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<LoadingPage />}>
                 <Events />
               </Suspense>
             }
@@ -49,7 +49,7 @@ export default function App() {
           <Route
             path="/my-events"
             element={
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<LoadingPage />}>
                 <MyEvents />
               </Suspense>
             }
@@ -57,7 +57,7 @@ export default function App() {
           <Route
             path="/events/:eventId"
             element={
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<LoadingPage />}>
                 <EventDetails />
               </Suspense>
             }
@@ -67,7 +67,7 @@ export default function App() {
         <Route
           path="/login"
           element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<LoadingPage />}>
               <Login />
             </Suspense>
           }
@@ -75,7 +75,7 @@ export default function App() {
         <Route
           path="/register"
           element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<LoadingPage />}>
               <Register />
             </Suspense>
           }
@@ -83,7 +83,7 @@ export default function App() {
         <Route
           path="/events/:eventId/join"
           element={
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<LoadingPage />}>
               <Invite />
             </Suspense>
           }
@@ -93,7 +93,7 @@ export default function App() {
           path="/create-event"
           element={
             <ProtectedRoute>
-              <Suspense fallback={<Loading />}>
+              <Suspense fallback={<LoadingPage />}>
                 <CreateEvent />
               </Suspense>
             </ProtectedRoute>

@@ -216,10 +216,21 @@ export class EventsService {
     page: number = 1,
     pageSize: number = 10,
     search?: string,
+    tags: string[] = [],
   ) {
     const skip = (page - 1) * pageSize;
 
     const whereClause = this.generateEventWhereClause(search);
+
+    if (tags.length > 0) {
+      Object.assign(whereClause, {
+        tags: {
+          some: {
+            name: { in: tags },
+          },
+        },
+      });
+    }
 
     const events = await this.prismaService.event.findMany({
       where: whereClause,
@@ -229,12 +240,18 @@ export class EventsService {
       orderBy: { dateTime: 'desc' },
     });
 
+    const sortedEvents = events.sort((a, b) => {
+      const aHasTags = a.tags && a.tags.length > 0 ? 1 : 0;
+      const bHasTags = b.tags && b.tags.length > 0 ? 1 : 0;
+      return bHasTags - aHasTags;
+    });
+
     const total = await this.prismaService.event.count({
       where: whereClause,
     });
 
     return {
-      events,
+      events: sortedEvents,
       page,
       pageSize,
       total,

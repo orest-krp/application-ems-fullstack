@@ -5,9 +5,11 @@ import { useEventActions } from "@/hooks/use-event-actions";
 import { useEventPermissions } from "@/hooks/use-event-permisions";
 import { useAuth } from "@/hooks/use-auth";
 import { useCallback } from "react";
-import type { EventCardResponse } from "@ems-fullstack/utils";
+import type { EventCardResponse, Tag } from "@ems-fullstack/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { LoadingButton } from "../ui/loading-button";
+import { Badge } from "../ui/badge";
+import { getTagColor } from "@/lib/utils";
 
 interface EventCardProps {
   event: EventCardResponse;
@@ -43,9 +45,20 @@ export function EventCard({ event }: EventCardProps) {
   return (
     <NavLink to={`/events/${event.id}`}>
       <Card className="hover:shadow-lg hover:scale-[1.01] transition gap-2 flex flex-col">
-        <CardHeader>
+        <CardHeader className="flex flex-col sm:flex-row justify-between">
           <div className="flex items-center justify-between">
             <CardTitle>{event.title}</CardTitle>
+          </div>
+          <div className="flex gap-1">
+            {event.tags.map((tag: Tag) => (
+              <Badge
+                key={tag.id}
+                className={getTagColor(tag.name)}
+                variant="outline"
+              >
+                {tag.name}
+              </Badge>
+            ))}
           </div>
         </CardHeader>
 
@@ -74,6 +87,7 @@ export function EventCard({ event }: EventCardProps) {
             <LoadingButton
               onClick={onClick}
               loading={isLoading}
+              disabled={isOrganizer || isLoading}
               loadingText={isJoined ? "Leaving..." : "Joining..."}
               className="w-full mt-auto"
             >

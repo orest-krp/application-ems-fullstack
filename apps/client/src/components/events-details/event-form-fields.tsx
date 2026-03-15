@@ -5,11 +5,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { FormFieldLabel } from "@/components/ui/field-label";
+import { FormFieldLabel } from "@/components/form/form-field-label";
 import { FieldLabel } from "@/components/ui/field";
 import { EventVisibility } from "@ems-fullstack/utils";
-import { FormInput } from "../ui/form-input";
 import { FormDatePicker } from "../ui/date-picker";
+import { FormTagsSelect } from "../form/form-multiselect";
+import { FormInput } from "../form/form-input";
 
 interface EventFormFieldsProps {
   control: any;
@@ -56,7 +57,6 @@ export function EventFormFields({ control }: EventFormFieldsProps) {
       </div>
       <FormInput
         name="location"
-        id="location"
         control={control}
         label="Location"
         placeholder="Event location"
@@ -67,6 +67,12 @@ export function EventFormFields({ control }: EventFormFieldsProps) {
         control={control}
         label="Capacity"
         placeholder="Event capacity"
+      />
+      <FormTagsSelect
+        name="tags"
+        control={control}
+        label="Tags"
+        description="Select multiple tags for your event"
       />
       <Controller
         name="visibility"
