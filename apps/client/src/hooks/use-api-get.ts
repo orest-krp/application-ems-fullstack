@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import useSWR, { type SWRConfiguration } from "swr";
+import useSWR, { type Key, type SWRConfiguration } from "swr";
 import { authfetcher } from "@/lib/fetcher";
 import type { FetchError } from "@ems-fullstack/utils";
 import type { UseApiGetResult } from "@/lib/types";
@@ -11,7 +11,7 @@ type UseApiGetOptions = {
 
 export function useApiGet<T>(
   url: string,
-  key: string | string[],
+  key: Key,
   options?: UseApiGetOptions
 ): UseApiGetResult<T> {
   const firstLoad = useRef(true);
@@ -21,6 +21,7 @@ export function useApiGet<T>(
     data,
     error,
     isLoading: swrLoading,
+    isValidating,
     mutate
   } = useSWR<T, FetchError>(key, async () => authfetcher(url), {
     shouldRetryOnError: (err) =>
@@ -39,6 +40,7 @@ export function useApiGet<T>(
     return {
       data: null,
       isLoading: false,
+      isValidating: false,
       error,
       mutate
     };
@@ -48,6 +50,7 @@ export function useApiGet<T>(
     return {
       data: data ?? null,
       isLoading: true,
+      isValidating,
       error: null,
       mutate
     };
@@ -57,6 +60,7 @@ export function useApiGet<T>(
     return {
       data: null,
       isLoading: true,
+      isValidating,
       error: null,
       mutate
     };
@@ -65,6 +69,7 @@ export function useApiGet<T>(
   return {
     data: data,
     isLoading: false,
+    isValidating,
     error: null,
     mutate
   };

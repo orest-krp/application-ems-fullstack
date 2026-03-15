@@ -33,6 +33,14 @@ export interface EventRequest {
   visibility: EventVisibility;
 }
 
+export interface EventSearchResponse {
+  events: EventCardResponse[];
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}
+
 export interface EventResponse {
   id: string;
   description: string | null;
@@ -47,8 +55,16 @@ export interface EventResponse {
 export interface EventDetailsResponse extends EventResponse {
   participants: ParticipantWithUser[];
   invitationLink: string;
+  tags: Tag[];
 }
 
-export interface EventCardDetailsResponse extends EventResponse {
+export interface EventCardResponse extends EventResponse {
   participants: Participant[];
+  tags: Tag[];
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  eventId: string | null;
 }

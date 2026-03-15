@@ -8,9 +8,8 @@ import { Field, FieldDescription, FieldError } from "./field";
 import { FormFieldLabel } from "./field-label";
 import { Input } from "./input";
 
-interface FormInputProps<T extends FieldValues> extends React.DetailedHTMLProps<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
+interface FormInputProps<T extends FieldValues> extends React.ComponentProps<
+  typeof Input
 > {
   name: Path<T>;
   label?: string;

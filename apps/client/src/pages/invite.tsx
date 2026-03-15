@@ -1,5 +1,4 @@
 import { ErrorState } from "@/components/error-state";
-import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,6 +12,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { MailCheck, PartyPopper } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { NoAuthorized } from "@/components/no-authorized";
+import { Loading } from "@/components/loading";
 
 export function Invite() {
   const {
@@ -25,7 +25,7 @@ export function Invite() {
   const token = searchParams.get("token") ?? undefined;
 
   const { joinEvent, joinEventLoading, joinEventError } = useEventActions(
-    eventId ?? null,
+    eventId,
     token
   );
 
@@ -35,11 +35,7 @@ export function Invite() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spinner />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (!user) {
@@ -69,7 +65,6 @@ export function Invite() {
 
           {joinEventLoading ? (
             <div className="flex flex-col items-center gap-3 text-muted-foreground">
-              <Spinner />
               <p className="text-sm">Joining event...</p>
             </div>
           ) : (

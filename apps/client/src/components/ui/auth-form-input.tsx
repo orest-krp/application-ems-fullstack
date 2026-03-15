@@ -12,10 +12,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 interface AuthFormInputProps<
   T extends FieldValues
-> extends React.DetailedHTMLProps<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
-> {
+> extends React.ComponentProps<typeof Input> {
   name: Path<T>;
   label: string;
   control: Control<T>;

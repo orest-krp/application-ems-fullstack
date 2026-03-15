@@ -31,7 +31,17 @@ export const eventSchema = yup
     visibility: yup
       .mixed<EventVisibility.PUBLIC | EventVisibility.PRIVATE>()
       .oneOf([EventVisibility.PUBLIC, EventVisibility.PRIVATE])
-      .required("Visibility is required")
+      .required("Visibility is required"),
+    tags: yup
+      .array()
+      .of(yup.string().trim().min(1).defined())
+      .max(5, "Maximum 5 tags allowed")
+      .optional()
+      .test("unique-tags", "Tags must be unique", (tags) => {
+        if (!tags) return true;
+        const normalized = tags.map((tag) => tag.toLowerCase());
+        return new Set(normalized).size === normalized.length;
+      })
   })
   .test("is-future-datetime", function (values) {
     if (!values?.date || !values?.time) return true;
@@ -75,5 +85,15 @@ export const eventApiSchema = yup.object({
   visibility: yup
     .mixed<EventVisibility.PUBLIC | EventVisibility.PRIVATE>()
     .oneOf([EventVisibility.PUBLIC, EventVisibility.PRIVATE])
-    .required()
+    .required(),
+  tags: yup
+    .array()
+    .of(yup.string().trim().min(1).defined())
+    .max(5, "Maximum 5 tags allowed")
+    .optional()
+    .test("unique-tags", "Tags must be unique", (tags) => {
+      if (!tags) return true;
+      const normalized = tags.map((tag) => tag.toLowerCase());
+      return new Set(normalized).size === normalized.length;
+    })
 });

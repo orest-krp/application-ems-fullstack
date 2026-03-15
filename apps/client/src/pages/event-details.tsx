@@ -1,8 +1,7 @@
 import { ErrorState } from "@/components/error-state";
-import { EventDetailsHeader } from "@/components/event-details-header";
-import { EventFormFields } from "@/components/event-form-fields";
-import { Participants } from "@/components/participants";
-import { Spinner } from "@/components/spinner";
+import { EventFormFields } from "@/components/events-details/event-form-fields";
+import { Participants } from "@/components/events-details/participants";
+import { Loading } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +16,9 @@ import { ArrowLeft, Calendar, MapPin } from "lucide-react";
 
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { LoadingButton } from "@/components/ui/loading-button";
+import { useMounted } from "@/hooks/use-mouted";
+import { EventDetailsHeader } from "@/components/events-details/event-details-header";
 
 export function EventDetails() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -26,12 +28,15 @@ export function EventDetails() {
     user: { data: user }
   } = useAuth();
 
+  const isMouted = useMounted();
+
   const {
-    eventDetails: { data: event, error, isLoading },
+    eventDetails: { data: event, error, isLoading, isValidating },
     isOrganizer,
     isJoined,
+    isShareAllowed,
     isFull
-  } = useEventDetails(eventId ?? null);
+  } = useEventDetails(eventId);
 
   const {
     editEvent,
@@ -39,8 +44,12 @@ export function EventDetails() {
     editEventError,
     joinEvent,
     leaveEvent,
-    deleteEvent
-  } = useEventActions(eventId || null);
+    deleteEvent,
+    editEventLoading,
+    joinEventLoading,
+    leaveEventloading,
+    deleteEventloading
+  } = useEventActions(eventId);
 
   const [isEdited, setEdited] = useState(false);
 
@@ -76,19 +85,21 @@ export function EventDetails() {
     [editEvent]
   );
 
-  const onJoin = useCallback(async () => {
+  const onJoin = async () => {
     await joinEvent();
-  }, [editEvent]);
+  };
 
-  const onLeave = useCallback(async () => {
+  const onLeave = async () => {
     await leaveEvent();
-  }, [leaveEvent]);
+  };
 
-  const onDelete = useCallback(async () => {
+  const onDelete = async () => {
     await deleteEvent();
-  }, [deleteEvent]);
+  };
 
-  if (isLoading) return <Spinner />;
+  const isFirstLoad = isLoading || (isValidating && !isMouted);
+
+  if (isFirstLoad) return <Loading />;
   if (error) return <ErrorState error={error} />;
 
   return (
@@ -120,6 +131,9 @@ export function EventDetails() {
             onDelete={onDelete}
             onJoin={onJoin}
             onLeave={onLeave}
+            isDeleting={deleteEventloading}
+            isJoining={joinEventLoading}
+            isLeaving={leaveEventloading}
           />
           <CardContent className="space-y-6">
             {isEdited ? (
@@ -130,13 +144,15 @@ export function EventDetails() {
               >
                 <EventFormFields control={control} />
 
-                <Button
+                <LoadingButton
                   type="submit"
-                  disabled={!isDirty}
+                  disabled={!isDirty || editEventLoading}
+                  loading={editEventLoading}
+                  loadingText="Editing..."
                   className="w-full mt-6"
                 >
                   Save changes
-                </Button>
+                </LoadingButton>
 
                 <ErrorMessage error={editEventError} />
               </form>
@@ -174,6 +190,7 @@ export function EventDetails() {
                 eventCapacity={event.capacity}
                 participants={event.participants}
                 organizerId={event.organizerId}
+                isShareAllowed={isShareAllowed}
               />
             )}
           </CardContent>

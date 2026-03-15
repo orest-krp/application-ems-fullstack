@@ -13,19 +13,20 @@ import {
 } from "@/components/ui/card";
 
 import { type EventRequestForm } from "@ems-fullstack/utils";
-import { EventFormFields } from "@/components/event-form-fields";
+import { EventFormFields } from "@/components/events-details/event-form-fields";
 import { useCallback } from "react";
 import { mergeDateTime } from "@/lib/utils";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { useEventForm } from "@/hooks/use-event-form";
 import { useCreateEvent } from "@/hooks/use-create-event";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export function CreateEvent() {
   const navigate = useNavigate();
 
   const { handleSubmit, control } = useEventForm();
 
-  const { createEvent, setError, error } = useCreateEvent();
+  const { createEvent, setError, error, loading } = useCreateEvent();
 
   const onCreate = useCallback(async (data: EventRequestForm) => {
     const { date, time, ...rest } = data;
@@ -79,9 +80,14 @@ export function CreateEvent() {
               Cancel
             </Button>
 
-            <Button type="submit" className="flex-1 sm:w-auto">
+            <LoadingButton
+              type="submit"
+              loading={loading}
+              loadingText="Creating"
+              className="flex-1 sm:w-auto"
+            >
               Create Event
-            </Button>
+            </LoadingButton>
           </CardFooter>
         </form>
         <ErrorMessage error={error} />

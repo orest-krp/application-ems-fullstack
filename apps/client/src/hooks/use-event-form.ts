@@ -9,17 +9,17 @@ import { useYupValidationResolver } from "./use-yup-resolver";
 import { useCallback } from "react";
 import dayjs from "dayjs";
 
-export function useEventForm() {
-  const defaultValues = {
-    title: "",
-    visibility: EventVisibility.PUBLIC,
-    location: "",
-    capacity: "",
-    description: "",
-    date: dayjs().format("YYYY-MM-DD"),
-    time: dayjs().format("HH:mm")
-  };
+const defaultValues = {
+  title: "",
+  visibility: EventVisibility.PUBLIC,
+  location: "",
+  capacity: "",
+  description: "",
+  date: dayjs().format("YYYY-MM-DD"),
+  time: dayjs().format("HH:mm")
+};
 
+export function useEventForm() {
   const {
     control,
     reset,
@@ -30,21 +30,24 @@ export function useEventForm() {
     defaultValues: defaultValues
   });
 
-  const resetValues = useCallback((event: EventDetailsResponse | null) => {
-    if (event) {
-      reset({
-        title: event.title,
-        visibility: event.visibility,
-        location: event.location,
-        capacity: String(event.capacity),
-        description: event.description || undefined,
-        date: dayjs(event.dateTime).format("YYYY-MM-DD"),
-        time: dayjs(event.dateTime).format("HH:mm")
-      });
-    } else {
-      reset(defaultValues);
-    }
-  }, []);
+  const resetValues = useCallback(
+    (event: EventDetailsResponse | null) => {
+      if (event) {
+        reset({
+          title: event.title,
+          visibility: event.visibility,
+          location: event.location,
+          capacity: String(event.capacity),
+          description: event.description || undefined,
+          date: dayjs(event.dateTime).format("YYYY-MM-DD"),
+          time: dayjs(event.dateTime).format("HH:mm")
+        });
+      } else {
+        reset(defaultValues);
+      }
+    },
+    [defaultValues]
+  );
 
   return {
     control,

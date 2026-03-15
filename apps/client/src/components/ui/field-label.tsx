@@ -1,7 +1,6 @@
 import { FieldLabel } from "@/components/ui/field";
-import type { Label } from "./label";
 
-interface FormFieldLabelProps extends React.ComponentProps<typeof Label> {
+interface FormFieldLabelProps extends React.ComponentProps<"label"> {
   required?: boolean;
 }
 
