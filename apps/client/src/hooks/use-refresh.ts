@@ -1,5 +1,5 @@
 import { mutateFirstKey } from "@/lib/utils";
-import { useEventsStore } from "@/store/event-store";
+import { useEventsStore } from "@/store/events-store";
 import { mutate } from "swr";
 
 export function useRefresh() {

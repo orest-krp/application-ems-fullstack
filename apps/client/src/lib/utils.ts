@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx";
 import dayjs from "dayjs";
 import { mutate } from "swr";
 import { twMerge } from "tailwind-merge";
+import type { Message } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -59,3 +60,12 @@ export function getTagColor(tag: string) {
     .reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return chipColors[index % chipColors.length];
 }
+
+export const createMessage = (
+  role: "user" | "assistant",
+  content: string
+): Message => ({
+  id: crypto.randomUUID(),
+  role,
+  content
+});

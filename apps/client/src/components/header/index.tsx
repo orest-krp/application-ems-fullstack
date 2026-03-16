@@ -6,6 +6,7 @@ import { UserMenu } from "./user-menu";
 import { MobileMenu } from "./mobile-menu";
 import { HeaderNavigaiton } from "./header-navigation";
 import { useRefresh } from "../../hooks/use-refresh";
+import { useChatStore } from "@/store/chat-store";
 
 export function Header() {
   const {
@@ -15,6 +16,7 @@ export function Header() {
   const { refreshAllEvents } = useRefresh();
 
   const { logout } = useAuth();
+  const clearMessages = useChatStore((store) => store.clearMessages);
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -29,6 +31,7 @@ export function Header() {
 
   const handleLogout = async () => {
     await logout();
+    clearMessages();
     refreshAllEvents();
   };
 

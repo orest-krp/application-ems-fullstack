@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { useEventsStore } from "@/store/event-store";
+import { useEventsStore } from "@/store/events-store";
 import { Search } from "lucide-react";
 
 export function EventsSearch() {

@@ -27,3 +27,9 @@ export interface TagOption {
   label: string;
   value: string;
 }
+
+export type Message = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+};

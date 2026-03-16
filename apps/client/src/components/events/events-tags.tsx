@@ -1,4 +1,4 @@
-import { useEventsStore } from "@/store/event-store";
+import { useEventsStore } from "@/store/events-store";
 import { TagsSelect } from "../ui/tag-select";
 
 export function EventsTags() {

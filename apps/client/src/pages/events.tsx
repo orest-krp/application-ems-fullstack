@@ -5,7 +5,7 @@ import { NoEvents } from "@/components/events/no-events";
 import { ErrorState } from "@/components/error-state";
 import { Loading } from "@/components/loading";
 import { useSearchEvents } from "@/hooks/use-search-events";
-import { useEventsStore } from "@/store/event-store";
+import { useEventsStore } from "@/store/events-store";
 import { Eventslist } from "@/components/events/events-list";
 import { useDebounce } from "@/hooks/use-debounce";
 import { EventsTags } from "@/components/events/events-tags";

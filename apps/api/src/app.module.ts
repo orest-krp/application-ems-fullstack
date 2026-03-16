@@ -6,12 +6,14 @@ import { PrismaService } from './prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
+import { AIModule } from './ai/ai.module';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
     EventsModule,
+    AIModule,
     ConfigModule.forRoot({
       load: [base],
       validationSchema: envValidationSchema,

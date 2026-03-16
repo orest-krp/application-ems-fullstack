@@ -7,7 +7,7 @@ import {
   PaginationPrevious
 } from "@/components/ui/pagination";
 
-import { useEventsStore } from "@/store/event-store";
+import { useEventsStore } from "@/store/events-store";
 import clsx from "clsx";
 
 interface EventsPagination {

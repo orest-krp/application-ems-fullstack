@@ -4,6 +4,7 @@ export default () => ({
     url: process.env.DATABASE_URL,
   },
   frontendUrl: process.env.FRONTEND_URL,
+  ai_key: process.env.GROQ_API_KEY,
 
   jwt: {
     accessSecret: process.env.JWT_ACCESS_SECRET,
