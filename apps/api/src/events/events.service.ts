@@ -234,7 +234,11 @@ export class EventsService {
 
     const events = await this.prismaService.event.findMany({
       where: whereClause,
-      include: { participants: true, tags: true },
+      include: {
+        participants: true,
+        tags: true,
+        organizer: { omit: { password: true, updatedAt: true } },
+      },
       skip,
       take: pageSize,
       orderBy: { dateTime: 'desc' },
@@ -278,6 +282,7 @@ export class EventsService {
       include: {
         participants: true,
         tags: true,
+        organizer: { omit: { password: true, updatedAt: true } },
       },
     });
   }

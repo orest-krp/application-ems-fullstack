@@ -1,6 +1,6 @@
 import type {
+  EventActionResponse,
   EventRequest,
-  EventResponse,
   ParticipantWithUser
 } from "@ems-fullstack/utils";
 import { useMutation } from "@/hooks/use-mutation";
@@ -17,13 +17,17 @@ export function useEventActions(eventId?: string, token?: string) {
     error: editEventError,
     setError: setEventError,
     loading: editEventLoading
-  } = useMutation<EventRequest, EventResponse>(`/events/${eventId}`, "PUT", {
-    onSuccess: (data) => {
-      toast.success("Event has been edited succesfully");
-      refreshCurrentEvents();
-      refreshEvent(data.id);
+  } = useMutation<EventRequest, EventActionResponse>(
+    `/events/${eventId}`,
+    "PUT",
+    {
+      onSuccess: (data) => {
+        toast.success("Event has been edited succesfully");
+        refreshCurrentEvents();
+        refreshEvent(data.id);
+      }
     }
-  });
+  );
 
   const {
     mutate: joinEvent,
@@ -62,13 +66,13 @@ export function useEventActions(eventId?: string, token?: string) {
 
   const { mutate: deleteEvent, loading: deleteEventloading } = useMutation<
     never,
-    ParticipantWithUser
+    EventActionResponse
   >(`/events/${eventId}`, "DELETE", {
     onSuccess: (data) => {
       toast.success("Event has been deleted");
       navigate("/events");
       refreshCurrentEvents();
-      refreshEvent(data.eventId);
+      refreshEvent(data.id);
     },
     onError: (error) => {
       toast.error(error.messages[0]);

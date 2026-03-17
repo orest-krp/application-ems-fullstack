@@ -22,7 +22,8 @@ import {
   Eye,
   FileText,
   MapPin,
-  Tag as TagIcon
+  Tag as TagIcon,
+  User
 } from "lucide-react";
 
 import { useCallback, useEffect, useState } from "react";
@@ -100,7 +101,7 @@ export function EventDetails() {
   if (error) return <ErrorState error={error} />;
 
   return (
-    <div className="flex w-full justify-center bg-primary-foreground py-8 px-4">
+    <div className="flex w-full justify-center bg-primary-foreground sm:py-8 sm:px-4">
       <div className="w-full max-w-3xl">
         <Button
           type="button"
@@ -150,9 +151,18 @@ export function EventDetails() {
               </form>
             ) : (
               <>
-                <div className="flex w-full flex-col gap-3">
+                <div className="flex w-full flex-col">
+                  <Item size="sm" className="p-0 py-2 sm:p-2">
+                    <ItemMedia variant="icon">
+                      <User />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>Author</ItemTitle>
+                      <ItemDescription>{event.organizer.name}</ItemDescription>
+                    </ItemContent>
+                  </Item>
                   {event?.description && (
-                    <Item size="sm">
+                    <Item size="sm" className="p-0 py-2 sm:p-2">
                       <ItemMedia variant="icon">
                         <FileText />
                       </ItemMedia>
@@ -163,7 +173,7 @@ export function EventDetails() {
                     </Item>
                   )}
 
-                  <Item size="sm">
+                  <Item size="sm" className="p-0 py-2 sm:p-2">
                     <ItemMedia variant="icon">
                       <Calendar />
                     </ItemMedia>
@@ -175,7 +185,7 @@ export function EventDetails() {
                     </ItemContent>
                   </Item>
 
-                  <Item size="sm">
+                  <Item size="sm" className="p-0 py-2 sm:p-2">
                     <ItemMedia variant="icon">
                       <MapPin />
                     </ItemMedia>
@@ -185,7 +195,7 @@ export function EventDetails() {
                     </ItemContent>
                   </Item>
 
-                  <Item size="sm">
+                  <Item size="sm" className="p-0 py-2 sm:p-2">
                     <ItemMedia variant="icon">
                       <Eye />
                     </ItemMedia>
@@ -207,7 +217,7 @@ export function EventDetails() {
                     </ItemContent>
                   </Item>
                   {event?.tags?.length > 0 && (
-                    <Item size="sm">
+                    <Item size="sm" className="p-0 py-2 sm:p-2">
                       <ItemMedia variant="icon">
                         <TagIcon />
                       </ItemMedia>

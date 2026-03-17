@@ -9,71 +9,88 @@ import { EventVisibility } from 'generated/prisma/enums';
 import { UserResponseDto } from './users.dto';
 
 export class ParticipantWithUserDto implements ParticipantWithUser {
-  @ApiProperty({ example: 'participant_9876' })
+  @ApiProperty()
   id: string;
 
-  @ApiProperty({
-    type: String,
-    format: 'date-time',
-    example: '2026-03-09T12:00:00Z',
-  })
+  @ApiProperty()
   joinedAt: Date;
 
-  @ApiProperty({ example: 'user_12345' })
+  @ApiProperty()
   userId: string;
 
-  @ApiProperty({ type: () => UserResponseDto })
+  @ApiProperty()
   user: UserResponse;
 
-  @ApiProperty({ example: 'event_56789' })
+  @ApiProperty()
   eventId: string;
 }
 
 export class ParticipantDto implements Participant {
-  @ApiProperty({ example: 'participant_9876' })
+  @ApiProperty()
   id: string;
 
-  @ApiProperty({
-    type: String,
-    format: 'date-time',
-    example: '2026-03-09T12:00:00Z',
-  })
+  @ApiProperty()
   joinedAt: Date;
 
-  @ApiProperty({ example: 'user_12345' })
+  @ApiProperty()
   userId: string;
 
-  @ApiProperty({ example: 'event_56789' })
+  @ApiProperty()
   eventId: string;
 }
 
 export class EventResponseDto {
-  @ApiProperty({ example: 'event_56789' })
+  @ApiProperty()
   id: string;
 
-  @ApiPropertyOptional({ nullable: true, example: 'A fun coding meetup' })
+  @ApiPropertyOptional()
   description: string | null;
 
-  @ApiPropertyOptional({ nullable: true, example: 50 })
+  @ApiPropertyOptional()
   capacity: number | null;
 
-  @ApiProperty({ example: 'Coding Meetup' })
+  @ApiProperty()
   title: string;
 
-  @ApiProperty({
-    type: String,
-    format: 'date-time',
-    example: '2026-03-20T18:30:00Z',
-  })
+  @ApiProperty()
   dateTime: Date;
 
-  @ApiProperty({ example: 'user_12345' })
+  @ApiProperty()
   organizerId: string;
 
-  @ApiProperty({ example: '123 Main St, San Francisco, CA' })
+  @ApiProperty()
+  organizer: UserResponseDto;
+
+  @ApiProperty()
   location: string;
 
-  @ApiProperty({ enum: EventVisibility, example: EventVisibility.PUBLIC })
+  @ApiProperty()
+  visibility: EventVisibility;
+}
+
+export class EventActionResponseDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiPropertyOptional()
+  description: string | null;
+
+  @ApiPropertyOptional()
+  capacity: number | null;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  dateTime: Date;
+
+  @ApiProperty()
+  organizerId: string;
+
+  @ApiProperty()
+  location: string;
+
+  @ApiProperty()
   visibility: EventVisibility;
 }
 

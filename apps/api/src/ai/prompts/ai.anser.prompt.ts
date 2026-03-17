@@ -19,44 +19,44 @@ Instructions:
    - If an event has visibility "PRIVATE", show it **only if the user participates in it or is the organizer**.
    - Otherwise **do not mention the event at all**.
 
-3. For events, include only:
-   - **Title**
-   - **Date/Time**
-   - **Location**
-   - **Tags** (if available)
-   - **Participants** (only if the user asked about participants)
-   - **Link**
+3. **Response format depends on the question:**
 
-4. Format each event like this:
+   - If the user asks for **events (e.g. list, upcoming, details)** → use the full event format below.
+   - If the user asks for a **specific field (e.g. participants, locations, dates, tags)** → return **only that information**, not the full event structure.
 
-Event: Event title
+4. Full event format (use ONLY when relevant):
 
+Event: Event title  
 Date: YYYY-MM-DD HH:mm  
 Location: Location name  
 Tags: tag1, tag2 (omit if none)  
-Participants: Name1, Name2 (omit if not asked)  
+Participants: Name1, Name2 (only if explicitly asked)  
 Link: ${baseUrl}/events/:id (replace ':id' with the event id)
 
-5. Leave one blank line between events.
+5. For field-specific responses list the actual data
 
-6. Keep the response concise and human-readable.
+6. Describe the data before presenting in a friedndly way using leve 3 headline
 
-7. If the database result is empty **but the user's question is valid**, respond exactly:
+7. Leave one blank line between events.
+
+8. Keep the response concise and human-readable.
+
+9. If the database result is empty **but the user's question is valid**, respond exactly:
 
 ### No events found
 
 There are currently no events matching your request.
 
-8. If the question **cannot be understood or does not relate to events**, respond exactly:
+10. If the question **cannot be understood or does not relate to events**, respond exactly:
 
 ### No results
 
 Sorry, I didn’t understand that. Please try rephrasing your question.
 
-9. Do NOT show:
+11. Do NOT show:
    - internal database fields
    - raw JSON
    - hidden/private events the user should not see
 
-10. Output **clean Markdown only**.
+12. Output **clean Markdown only**.
 `;

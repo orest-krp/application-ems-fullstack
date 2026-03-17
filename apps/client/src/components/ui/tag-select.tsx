@@ -18,14 +18,21 @@ import type { TagOption } from "@/lib/types";
 import { useTags } from "@/hooks/use-tags";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useState, useMemo } from "react";
+import { Tags } from "lucide-react";
 
 interface TagsSelectProps {
   value?: string[];
   onChange?: (values: string[]) => void;
   className?: string;
+  isIcon?: boolean;
 }
 
-export function TagsSelect({ value, onChange, className }: TagsSelectProps) {
+export function TagsSelect({
+  value,
+  onChange,
+  className,
+  isIcon = true
+}: TagsSelectProps) {
   const anchor = useComboboxAnchor();
   const [search, setSearch] = useState("");
 
@@ -95,23 +102,27 @@ export function TagsSelect({ value, onChange, className }: TagsSelectProps) {
                 </ComboboxChip>
               ))}
 
-              <ComboboxChipsInput
-                onChange={(e) => setSearch(e.target.value)}
-                className={className}
-                placeholder="Search for tags..."
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && e.currentTarget.value.trim()) {
-                    e.preventDefault();
-                    handleAddTag(e.currentTarget.value);
-                    e.currentTarget.value = "";
-                  }
-                }}
-              />
+              <div className="relative flex-1">
+                {isIcon && (
+                  <Tags className="absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                )}
+                <ComboboxChipsInput
+                  onChange={(e) => setSearch(e.target.value)}
+                  className={clsx(isIcon && "pl-6", className)}
+                  placeholder="Search for tags..."
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                      e.preventDefault();
+                      handleAddTag(e.currentTarget.value);
+                      e.currentTarget.value = "";
+                    }
+                  }}
+                />
+              </div>
             </>
           )}
         </ComboboxValue>
       </ComboboxChips>
-
       <ComboboxContent anchor={anchor}>
         <ComboboxEmpty>No items found.</ComboboxEmpty>
 

@@ -47,6 +47,19 @@ export interface EventResponse {
   capacity: number | null;
   title: string;
   dateTime: Date;
+  organizer: UserResponse;
+  organizerId: string;
+  location: string;
+  visibility: EventVisibility;
+}
+
+export interface EventActionResponse {
+  id: string;
+  description: string | null;
+  capacity: number | null;
+  title: string;
+  dateTime: Date;
+  organizer: UserResponse;
   organizerId: string;
   location: string;
   visibility: EventVisibility;

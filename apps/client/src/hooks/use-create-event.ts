@@ -1,4 +1,4 @@
-import type { EventRequest, EventResponse } from "@ems-fullstack/utils";
+import type { EventActionResponse, EventRequest } from "@ems-fullstack/utils";
 import { useMutation } from "./use-mutation";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ export function useCreateEvent() {
     setError,
     mutate: createEvent,
     loading
-  } = useMutation<EventRequest, EventResponse>("/events", "POST", {
+  } = useMutation<EventRequest, EventActionResponse>("/events", "POST", {
     onSuccess(data) {
       refreshCurrentEvents();
       navigate(`/events/${data.id}`);

@@ -23,6 +23,9 @@ export default function AiAssistant() {
   const messages = useChatStore((state) => state.messages);
   const addMessage = useChatStore((state) => state.addMessage);
   const [input, setInput] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => setOpen(false);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -49,15 +52,18 @@ export default function AiAssistant() {
   };
 
   return (
-    <Drawer direction="right">
+    <Drawer direction="right" open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="fixed bottom-6 w-10 h-10 right-6 rounded-full shadow-lg z-50">
+        <Button
+          onClick={() => setOpen(true)}
+          className="fixed bottom-6 w-10 h-10 right-6 rounded-full shadow-lg z-50"
+        >
           <MessageCircle className="w-6 h-6" />
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent className="w-full max-w-sm flex flex-col">
-        <DrawerHeader className="flex flex-row items-start justify-between gap-2">
+      <DrawerContent className="w-full flex flex-col">
+        <DrawerHeader className="flex flex-row items-center justify-between gap-2">
           <div>
             <DrawerTitle>AI Assistant</DrawerTitle>
             <DrawerDescription>Ask me anything!</DrawerDescription>
@@ -75,16 +81,21 @@ export default function AiAssistant() {
             </Button>
 
             <DrawerClose asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setOpen(false)}
+              >
                 <X className="h-4 w-4" />
               </Button>
             </DrawerClose>
           </div>
         </DrawerHeader>
 
-        <Chat messages={messages} loading={loading} />
+        <Chat messages={messages} loading={loading} close={handleClose} />
 
-        <DrawerFooter className="flex flex-col gap-2 p-4">
+        <DrawerFooter className="flex flex-col gap-2 p-4 border-t border-border">
           <ChatInput input={input} setInput={setInput} onSend={handleSend} />
         </DrawerFooter>
       </DrawerContent>

@@ -32,7 +32,11 @@ export function FormTagsSelect<T extends FieldValues>({
         <Field data-invalid={fieldState.invalid}>
           {label && <FormFieldLabel htmlFor={name}>{label}</FormFieldLabel>}
 
-          <TagsSelect value={field.value} onChange={field.onChange} />
+          <TagsSelect
+            value={field.value}
+            onChange={field.onChange}
+            isIcon={false}
+          />
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           {description && <FieldDescription>{description}</FieldDescription>}
         </Field>

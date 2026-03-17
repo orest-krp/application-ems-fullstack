@@ -26,10 +26,10 @@ import { OptionalJwtAuthGuard } from 'src/auth/guards/optional.jwt-auth.guard';
 import { YupValidationPipe } from 'src/utils/validation.pipe';
 
 import {
+  EventActionResponseDto,
   EventCardResponseDto,
   EventDetailsResponseDto,
   EventRequestDto,
-  EventResponseDto,
 } from 'src/utils/dto/events.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
@@ -49,7 +49,7 @@ export class EventsController {
   async createEvent(
     @Body() event: EventRequestDto,
     @Req() req: AuthReq,
-  ): Promise<EventResponseDto> {
+  ): Promise<EventActionResponseDto> {
     return this.eventService.createEvent(event, req.user.id);
   }
 
@@ -81,7 +81,7 @@ export class EventsController {
     @Body(new YupValidationPipe(eventApiSchema)) event: EventRequestDto,
     @Param('eventId') eventId: string,
     @Req() req: AuthReq,
-  ): Promise<EventResponseDto> {
+  ): Promise<EventActionResponseDto> {
     return this.eventService.editEvent(event, req.user.id, eventId);
   }
 
@@ -92,7 +92,7 @@ export class EventsController {
   async deleteEvent(
     @Param('eventId') eventId: string,
     @Req() req: AuthReq,
-  ): Promise<EventResponseDto> {
+  ): Promise<EventActionResponseDto> {
     return this.eventService.deleteEvent(req.user.id, eventId);
   }
 

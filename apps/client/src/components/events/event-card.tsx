@@ -1,4 +1,4 @@
-import { CalendarDays, Clock, MapPin, Users } from "lucide-react";
+import { CalendarDays, Clock, MapPin, User, Users } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 import { useEventActions } from "@/hooks/use-event-actions";
@@ -45,17 +45,13 @@ export function EventCard({ event }: EventCardProps) {
   return (
     <NavLink to={`/events/${event.id}`}>
       <Card className="hover:shadow-lg hover:scale-[1.01] transition gap-2 flex flex-col">
-        <CardHeader className="flex flex-col sm:flex-row justify-between">
+        <CardHeader className="flex flex-col sm:flex-row">
           <div className="flex items-center justify-between">
-            <CardTitle>{event.title}</CardTitle>
+            <CardTitle className="mb-2">{event.title}</CardTitle>
           </div>
           <div className="flex gap-1">
             {event.tags.map((tag: Tag) => (
-              <Badge
-                key={tag.id}
-                className={getTagColor(tag.name)}
-                variant="outline"
-              >
+              <Badge key={tag.id} className={getTagColor(tag.name)}>
                 {tag.name}
               </Badge>
             ))}
@@ -66,7 +62,10 @@ export function EventCard({ event }: EventCardProps) {
           <p className="text-sm text-muted-foreground line-clamp-2">
             {event.description}
           </p>
-
+          <div className="flex items-center gap-2 text-sm">
+            <User className="h-4 w-4" />
+            {event.organizer.name}
+          </div>
           <div className="flex items-center gap-2 text-sm">
             <CalendarDays className="h-4 w-4" />
             {dayjs(event.dateTime).format("dddd, MMMM D")}

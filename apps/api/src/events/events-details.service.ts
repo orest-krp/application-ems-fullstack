@@ -25,6 +25,7 @@ export class EventsDetailsService {
       where: { id: eventId },
       include: {
         tags: { omit: { createdAt: true, updatedAt: true } },
+        organizer: { omit: { password: true, updatedAt: true } },
         participants: {
           include: {
             user: { omit: { password: true, updatedAt: true } },
