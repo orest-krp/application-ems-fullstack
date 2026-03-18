@@ -5,8 +5,8 @@ import type {
   UserResponse,
 } from '@ems-fullstack/utils';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { EventVisibility } from 'generated/prisma/enums';
 import { UserResponseDto } from './users.dto';
+import { EventVisibility } from '@ems-fullstack/database';
 
 export class ParticipantWithUserDto implements ParticipantWithUser {
   @ApiProperty()

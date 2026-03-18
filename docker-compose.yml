@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   db:
-    image: postgres:15
+    image: postgres:18
     container_name: ems-db
     restart: always
     environment:
@@ -12,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
 
   api:
     build:
@@ -30,6 +28,7 @@ services:
       JWT_ACCESS_EXPIRATION_TIME: ${JWT_ACCESS_EXPIRATION_TIME}
       JWT_REFRESH_EXPIRATION_TIME: ${JWT_REFRESH_EXPIRATION_TIME}
       JWT_INVITATION: ${JWT_INVITATION}
+      GROQ_API_KEY: ${GROQ_API_KEY}
     ports:
       - "8000:8000"
 
@@ -41,7 +40,6 @@ services:
     depends_on:
       - api
     environment:
-      VITE_PORT: ${VITE_PORT}
       VITE_API_URL: ${VITE_API_URL}
     ports:
       - "5173:5173"

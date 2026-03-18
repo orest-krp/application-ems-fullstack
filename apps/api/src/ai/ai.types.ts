@@ -1,4 +1,4 @@
-import { Prisma } from 'generated/prisma/client';
+import { Prisma } from '@ems-fullstack/database';
 
 export type AIFindManyQuery = {
   model: 'Event';

@@ -10,7 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { EventRequestDto } from 'src/utils/dto/events.dto';
 import { PrismaService } from 'src/prisma.service';
 import { JWTProviders } from 'src/utils/types/jwt';
-import { EventVisibility } from 'generated/prisma/enums';
+import { EventVisibility } from '@ems-fullstack/database';
 
 @Injectable()
 export class EventsService {

@@ -6,11 +6,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { EventVisibility } from 'generated/prisma/enums';
 import { EventDetailsResponseDto } from 'src/utils/dto/events.dto';
 import { PrismaService } from 'src/prisma.service';
 import { JWTProviders } from 'src/utils/types/jwt';
-import { Event } from 'generated/prisma/client';
+import { EventVisibility } from '@ems-fullstack/database';
 
 @Injectable()
 export class EventsDetailsService {
@@ -39,25 +38,6 @@ export class EventsDetailsService {
     }
 
     return event;
-  }
-
-  private async buildInvitationLink(
-    event: Event,
-    userId?: string,
-    email?: string,
-  ): Promise<string> {
-    let link = `${this.configService.getOrThrow('frontendUrl')}/events/${event.id}/join`;
-
-    if (
-      event.visibility === EventVisibility.PRIVATE &&
-      event.organizerId === userId &&
-      email
-    ) {
-      const token = await this.generateAccessEventToken(event.id);
-      link += `?token=${token}`;
-    }
-
-    return link;
   }
 
   async generateAccessEventToken(eventId: string) {

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
+    "@ems-fullstack/eslint-config": "workspace:*",
+    "@ems-fullstack/typescript-config": "workspace:*",
     "@ems-fullstack/utils": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-icons": "^1.3.2",

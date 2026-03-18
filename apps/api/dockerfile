@@ -3,7 +3,7 @@ FROM node:${NODE_VERSION}
 
 WORKDIR /app
 
-RUN npm install -g pnpm prisma
+RUN npm install -g pnpm prisma turbo
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 
@@ -12,23 +12,12 @@ COPY packages ./packages
 
 RUN pnpm install
 
-WORKDIR /app/apps/api
+RUN turbo run build
 
-RUN npx prisma generate
+RUN turbo run generate
 
-WORKDIR /app/apps
-
-RUN pnpm build
-
-WORKDIR /app/apps/api
+WORKDIR /app
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "\
-    echo 'Running push to db...' && \
-    pnpm run push || echo 'Generate failed, continuing...' && \
-    echo 'Running seed...' && \
-    pnpm run seed || echo 'Seed failed, continuing...' && \
-    echo 'Starting dev server...' && \
-    pnpm run dev \
-    "]
+CMD ["pnpm", "run", "docker"]

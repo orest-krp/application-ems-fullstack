@@ -7,10 +7,10 @@ import {
 import Groq from 'groq-sdk';
 import { PrismaService } from 'src/prisma.service';
 import { AIQuery } from './ai.types';
-import { Prisma } from 'generated/prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { buildQueryPrompt } from './prompts/ai.query-prompt';
 import { buildAnswerPrompt } from './prompts/ai.anser.prompt';
+import { Prisma } from '@ems-fullstack/database';
 
 @Injectable()
 export class AIService {

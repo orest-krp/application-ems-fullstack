@@ -1,0 +1,45 @@
+{
+  "name": "@ems-fullstack/database",
+  "version": "1.0.0",
+  "exports": {
+    ".": {
+      "import": "./dist/client.js",
+      "require": "./dist/client.js",
+      "types": "./dist/client.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "format": "prisma format",
+    "generate": "prisma generate",
+    "lint": "eslint . --max-warnings 0",
+    "prebuild": "npm run generate",
+    "predev": "npm run generate",
+    "studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.5.0",
+    "@prisma/client-runtime-utils": "7.5.0",
+    "argon2": "^0.44.0"
+  },
+  "devDependencies": {
+    "@ems-fullstack/eslint-config": "workspace:*",
+    "@ems-fullstack/typescript-config": "workspace:*",
+    "@prisma/adapter-pg": "^7.5.0",
+    "@types/node": "^25.5.0",
+    "@types/pg": "^8.18.0",
+    "dotenv": "^17.3.1",
+    "eslint": "^8.57.0",
+    "pg": "^8.20.0",
+    "prisma": "^7.5.0",
+    "rimraf": "^5.0.5",
+    "tsx": "4.21.0",
+    "typescript": "5.5.4"
+  }
+}
