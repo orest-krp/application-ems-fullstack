@@ -7,7 +7,6 @@ import {
   CardTitle,
   CardDescription
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { Link } from "react-router-dom";
 import { registerUserShema, type RegisterUser } from "@ems-fullstack/utils";
@@ -15,12 +14,14 @@ import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
 import { AuthFormInput } from "@/components/form/auth-form-input";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { useAuth } from "@/hooks/use-auth";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export function Register() {
   const {
     register,
     errors: { registerError },
-    setRegisterError
+    setRegisterError,
+    isRegisterLoading
   } = useAuth();
 
   const { handleSubmit, control } = useForm<RegisterUser>({
@@ -34,7 +35,7 @@ export function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-primary-foreground">
+    <div className="flex flex-col gap-6 items-center justify-center p-4 min-h-screen bg-primary-foreground">
       <Card className="max-w-md w-full">
         <CardHeader>
           <CardTitle>Register</CardTitle>
@@ -71,9 +72,13 @@ export function Register() {
                 icon={<Lock className="h-4 w-4 text-muted-foreground" />}
                 isPassword
               />
-              <Button type="submit" className="w-full mt-2">
+              <LoadingButton
+                loading={isRegisterLoading}
+                type="submit"
+                className="w-full mt-2"
+              >
                 Register
-              </Button>
+              </LoadingButton>
             </FieldGroup>
             <ErrorMessage error={registerError} />
             <div className="mt-4 text-center">

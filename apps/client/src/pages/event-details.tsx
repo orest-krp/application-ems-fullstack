@@ -107,7 +107,7 @@ export function EventDetails() {
           type="button"
           variant="ghost"
           size="sm"
-          className="mb-4 flex items-center gap-2 px-0"
+          className="mb-2 mt-2 flex items-center gap-2 px-0"
           onClick={() => navigate("/events")}
         >
           <ArrowLeft />

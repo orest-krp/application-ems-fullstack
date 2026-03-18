@@ -26,8 +26,9 @@ export function useEventPermissions(
     : "Unlimited";
 
   const isPrivate = event?.visibility == EventVisibility.PRIVATE;
+  const isPublic = event?.visibility == EventVisibility.PUBLIC;
 
-  const isShareAllowed = isOrganizer && isPrivate;
+  const isShareAllowed = isPublic || (isOrganizer && isPrivate);
 
   return {
     isOrganizer,

@@ -13,7 +13,8 @@ export function useAuth() {
   const {
     mutate: login,
     error: loginError,
-    setError: setLoginError
+    setError: setLoginError,
+    loading: isLoginLoading
   } = useMutation<LoginUser>(
     "/auth/login",
     "POST",
@@ -29,7 +30,8 @@ export function useAuth() {
   const {
     mutate: logout,
     error: logoutError,
-    setError: setLogoutError
+    setError: setLogoutError,
+    loading: isLogoutLoading
   } = useMutation("/auth/logout", "POST", {
     onSuccess: () => {
       user.mutate();
@@ -40,7 +42,8 @@ export function useAuth() {
   const {
     mutate: register,
     error: registerError,
-    setError: setRegisterError
+    setError: setRegisterError,
+    loading: isRegisterLoading
   } = useMutation(
     "/auth/register",
     "POST",
@@ -65,6 +68,9 @@ export function useAuth() {
     },
     setLoginError,
     setLogoutError,
-    setRegisterError
+    setRegisterError,
+    isLoginLoading,
+    isLogoutLoading,
+    isRegisterLoading
   };
 }

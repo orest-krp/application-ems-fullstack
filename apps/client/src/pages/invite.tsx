@@ -1,5 +1,4 @@
 import { ErrorState } from "@/components/error-state";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import { MailCheck, PartyPopper } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { NoAuthorized } from "@/components/no-authorized";
 import { Loading } from "@/components/loading";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export function Invite() {
   const {
@@ -69,14 +69,16 @@ export function Invite() {
             </div>
           ) : (
             !joinEventError && (
-              <Button
+              <LoadingButton
+                loading={joinEventLoading}
+                loadingText="Joining..."
                 onClick={handleJoin}
                 className="w-full flex items-center gap-2"
                 size="lg"
               >
                 <PartyPopper className="h-4 w-4" />
                 Join Event
-              </Button>
+              </LoadingButton>
             )
           )}
         </CardContent>
