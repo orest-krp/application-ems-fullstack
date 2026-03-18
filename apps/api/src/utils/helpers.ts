@@ -12,14 +12,14 @@ export function setTokens(
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     path: '/',
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     path: '/',
   });
 }

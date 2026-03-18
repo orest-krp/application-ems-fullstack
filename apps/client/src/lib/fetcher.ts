@@ -28,7 +28,7 @@ const makeFetcher =
       throw {
         statusCode: 500,
         error: "Unknown error",
-        message: "Unknown error occurred"
+        messages: ["Unknown error occurred"]
       };
     }
   };
