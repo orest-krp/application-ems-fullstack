@@ -15,7 +15,8 @@ interface EventsPagination {
 }
 
 export function EventsPagination({ totalPages }: EventsPagination) {
-  const { page, setPage } = useEventsStore();
+  const setPage = useEventsStore((state) => state.setPage);
+  const page = useEventsStore((state) => state.page);
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 

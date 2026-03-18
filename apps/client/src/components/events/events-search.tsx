@@ -3,7 +3,8 @@ import { useEventsStore } from "@/store/events-store";
 import { Search } from "lucide-react";
 
 export function EventsSearch() {
-  const { search, setSearch } = useEventsStore();
+  const setSearch = useEventsStore((state) => state.setSearch);
+  const search = useEventsStore((state) => state.search);
 
   return (
     <div className="relative w-full">
