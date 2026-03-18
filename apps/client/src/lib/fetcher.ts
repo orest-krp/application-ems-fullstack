@@ -1,28 +1,34 @@
 import { api, authApi } from "@/lib/axios";
-import axios, { type AxiosInstance, type Method } from "axios";
+import axios, {
+  type AxiosInstance,
+  type AxiosResponse,
+  type Method
+} from "axios";
 
 const makeFetcher =
   (client: AxiosInstance) =>
-  async <T>(
+  async <Req = unknown, Res = unknown>(
     url: string,
-    data?: unknown,
+    data?: Req,
     method: Method = "GET"
-  ): Promise<T> => {
+  ): Promise<Res> => {
     try {
-      const response = await client.request<T>({
+      const response = await client.request<Res, AxiosResponse<Res>>({
         url,
         method,
         data
       });
+
       return response.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data) {
         throw error.response.data;
       }
+
       throw {
         statusCode: 500,
         error: "Unknown error",
-        message: "Unknown error occurred"
+        messages: ["Unknown error occurred"]
       };
     }
   };

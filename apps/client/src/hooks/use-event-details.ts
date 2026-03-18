@@ -1,29 +1,27 @@
-import type { UseApiGetResult } from "@/lib/types";
 import type { EventDetailsResponse } from "@ems-fullstack/utils";
 import { useApiGet } from "./use-api-get";
 import { useEventPermissions } from "./use-event-permisions";
 
-interface UseEventDetailsResult {
-  eventDetails: UseApiGetResult<EventDetailsResponse>;
-  isOrganizer: boolean;
-  isJoined: boolean;
-  isFull: boolean;
-}
-
-export function useEventDetails(eventId: string | null): UseEventDetailsResult {
+export function useEventDetails(eventId?: string) {
   const eventDetails = useApiGet<EventDetailsResponse>(
-    `/event/${eventId}`,
-    `/event/${eventId}`
+    `/events/${eventId}`,
+    ["/events", eventId],
+    {
+      isVisible: () => !!eventId,
+      revalidateOnFocus: false,
+      revalidateIfStale: false
+    }
   );
 
-  const { isOrganizer, isJoined, isFull } = useEventPermissions(
-    eventDetails.data
-  );
+  const { isOrganizer, isJoined, isFull, isPrivate, isShareAllowed } =
+    useEventPermissions(eventDetails.data);
 
   return {
     eventDetails,
     isOrganizer,
     isJoined,
-    isFull
+    isFull,
+    isPrivate,
+    isShareAllowed
   };
 }

@@ -12,14 +12,34 @@ export function setTokens(
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     path: '/',
+    partitioned: true,
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     path: '/',
+    partitioned: true,
+  });
+}
+
+export function deleteTokens(res: Response) {
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    path: '/',
+    partitioned: true,
+  });
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    path: '/',
+    partitioned: true,
   });
 }

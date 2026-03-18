@@ -1,17 +1,17 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
 
 import argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
-import { JWTProviders } from 'src/utils/constants';
 import { AuthUser } from '@ems-fullstack/utils';
-import { UserResponseDto } from 'src/dto/event.dto';
-import { RegisterUserDto } from 'src/dto/auth.dto';
+import { RegisterUserDto } from 'src/utils/dto/auth.dto';
+import { JWTProviders } from 'src/utils/types/jwt';
+import { UsersService } from 'src/users/users.service';
+import { UserResponseDto } from 'src/utils/dto/users.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private userService: UsersService,
     @Inject(JWTProviders.ACCESS) private readonly accessJwt: JwtService,
     @Inject(JWTProviders.REFRESH) private readonly refreshJwt: JwtService,
   ) {}

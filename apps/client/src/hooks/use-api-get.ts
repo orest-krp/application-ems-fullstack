@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import useSWR, { type SWRConfiguration } from "swr";
-import { authfetcher } from "@/lib/fetcher";
+import useSWR, { type Key, type SWRConfiguration } from "swr";
+import { authfetcher, fetcher } from "@/lib/fetcher";
 import type { FetchError } from "@ems-fullstack/utils";
 import type { UseApiGetResult } from "@/lib/types";
 
@@ -11,8 +11,9 @@ type UseApiGetOptions = {
 
 export function useApiGet<T>(
   url: string,
-  key: string | string[],
-  options?: UseApiGetOptions
+  key: Key,
+  options?: UseApiGetOptions,
+  isAuth = true
 ): UseApiGetResult<T> {
   const firstLoad = useRef(true);
   const retryOn = options?.retryOn ?? [];
@@ -21,16 +22,23 @@ export function useApiGet<T>(
     data,
     error,
     isLoading: swrLoading,
+    isValidating,
     mutate
-  } = useSWR<T, FetchError>(key, async () => authfetcher(url), {
-    shouldRetryOnError: (err) =>
-      retryOn.length === 0
-        ? ![401, 404].includes(err.statusCode)
-        : retryOn.includes(err.statusCode),
-    revalidateOnFocus: true,
+  } = useSWR<T, FetchError>(
+    key,
+    async () => {
+      return isAuth ? authfetcher(url) : fetcher(url);
+    },
+    {
+      shouldRetryOnError: (err) =>
+        retryOn.length === 0
+          ? ![401, 404].includes(err.statusCode)
+          : retryOn.includes(err.statusCode),
+      revalidateOnFocus: true,
 
-    ...options
-  });
+      ...options
+    }
+  );
 
   if (data && firstLoad.current) firstLoad.current = false;
   const isLoading = firstLoad.current && swrLoading;
@@ -39,6 +47,7 @@ export function useApiGet<T>(
     return {
       data: null,
       isLoading: false,
+      isValidating: false,
       error,
       mutate
     };
@@ -48,6 +57,7 @@ export function useApiGet<T>(
     return {
       data: data ?? null,
       isLoading: true,
+      isValidating,
       error: null,
       mutate
     };
@@ -57,6 +67,7 @@ export function useApiGet<T>(
     return {
       data: null,
       isLoading: true,
+      isValidating,
       error: null,
       mutate
     };
@@ -65,6 +76,7 @@ export function useApiGet<T>(
   return {
     data: data,
     isLoading: false,
+    isValidating,
     error: null,
     mutate
   };

@@ -1,54 +1,48 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { authfetcher, fetcher } from "@/lib/fetcher";
 import type { FetchError } from "@ems-fullstack/utils";
+import useSWRMutation from "swr/mutation";
 import type { Method } from "axios";
 
 interface UseMutationOptions<Res> {
   onSuccess?: (data: Res) => void;
   onError?: (error: FetchError) => void;
-  onFinish?: () => void;
 }
 
-export function useMutation<T, Res = any>(
-  endpoint: string,
+export function useMutation<Req = unknown, Res = unknown>(
+  url: string,
   method: Method,
   options?: UseMutationOptions<Res>,
   isAuth = true
 ) {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<FetchError | null>(null);
 
-  const mutate = useCallback(
-    async (mutatioData?: T) => {
-      setLoading(true);
-      setError(null);
+  const mutationFetcher = async (
+    key: string,
+    { arg }: { arg: Req }
+  ): Promise<Res> => {
+    if (isAuth) {
+      return authfetcher<Req, Res>(key, arg, method);
+    }
+    return fetcher<Req, Res>(key, arg, method);
+  };
 
-      try {
-        let data;
-        if (isAuth) {
-          data = await authfetcher<Res>(endpoint, mutatioData, method);
-        } else {
-          data = await fetcher<Res>(endpoint, mutatioData, method);
-        }
-        if (options?.onSuccess) {
-          options?.onSuccess(data);
-        }
-      } catch (error) {
-        setError(error as FetchError);
-        if (options?.onError) {
-          options?.onError(error as FetchError);
-        }
-
-        throw error;
-      } finally {
-        if (options?.onFinish) {
-          options.onFinish();
-        }
-        setLoading(false);
+  const { trigger, isMutating } = useSWRMutation<Res, FetchError, string, Req>(
+    url,
+    mutationFetcher,
+    {
+      onSuccess: (data) => options?.onSuccess?.(data),
+      onError: (err) => {
+        setError(err);
+        options?.onError?.(err);
       }
-    },
-    [endpoint, method]
+    }
   );
 
-  return { mutate, loading, error, setError };
+  return {
+    mutate: trigger,
+    loading: isMutating,
+    error,
+    setError
+  };
 }

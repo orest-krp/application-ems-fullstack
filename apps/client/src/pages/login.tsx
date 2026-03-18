@@ -8,18 +8,19 @@ import {
   CardTitle,
   CardDescription
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { loginUserSchema, type LoginUser } from "@ems-fullstack/utils";
 import { useYupValidationResolver } from "@/hooks/use-yup-resolver";
-import { AuthFormInput } from "@/components/ui/auth-form-input";
+import { AuthFormInput } from "@/components/form/auth-form-input";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { useAuth } from "@/hooks/use-auth";
+import { LoadingButton } from "@/components/ui/loading-button";
 
 export function Login() {
   const {
     login,
     errors: { loginError },
-    setLoginError
+    setLoginError,
+    isLoginLoading
   } = useAuth();
 
   const { handleSubmit, control } = useForm<LoginUser>({
@@ -33,7 +34,7 @@ export function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-primary-foreground">
+    <div className="flex items-center justify-center p-4 min-h-screen bg-primary-foreground">
       <Card className="max-w-md w-full">
         <CardHeader>
           <CardTitle>Login</CardTitle>
@@ -63,9 +64,13 @@ export function Login() {
                 icon={<Lock className="h-4 w-4 text-muted-foreground" />}
                 isPassword
               />
-              <Button type="submit" className="w-full mt-2">
+              <LoadingButton
+                loading={isLoginLoading}
+                type="submit"
+                className="w-full mt-2"
+              >
                 Login
-              </Button>
+              </LoadingButton>
             </div>
             <ErrorMessage error={loginError} />
             <div className="mt-4 text-center">

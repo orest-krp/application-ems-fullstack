@@ -9,11 +9,11 @@ export const envValidationSchema = Joi.object({
   JWT_ACCESS_SECRET: Joi.string().min(10).required(),
   JWT_REFRESH_SECRET: Joi.string().min(10).required(),
 
-  JWT_ACCESS_EXPIRATION_TIME: Joi.string()
-    .pattern(/^\d+(s|m|h|d)$/)
-    .required(),
+  JWT_ACCESS_EXPIRATION_TIME: Joi.string().required(),
 
-  JWT_REFRESH_EXPIRATION_TIME: Joi.string()
-    .pattern(/^\d+(s|m|h|d)$/)
-    .required(),
+  JWT_REFRESH_EXPIRATION_TIME: Joi.string().required(),
+
+  JWT_INVITATION: Joi.string().required(),
+
+  GROQ_API_KEY: Joi.string().required(),
 });

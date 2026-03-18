@@ -31,7 +31,28 @@ export const eventSchema = yup
     visibility: yup
       .mixed<EventVisibility.PUBLIC | EventVisibility.PRIVATE>()
       .oneOf([EventVisibility.PUBLIC, EventVisibility.PRIVATE])
-      .required("Visibility is required")
+      .required("Visibility is required"),
+    tags: yup
+      .array()
+      .optional()
+      .max(5, "Maximum 5 tags allowed")
+      .test("tags-validation", "Tags are invalid", (tags) => {
+        if (!tags) return true;
+
+        for (const tag of tags) {
+          const trimmed = tag.trim();
+          if (!trimmed) return false;
+
+          if (!/[a-zA-Z]/.test(trimmed)) return false;
+
+          if (!/^[a-zA-Z0-9.-]+$/.test(trimmed)) return false;
+        }
+
+        const normalized = tags.map((tag) => tag.trim().toLowerCase());
+        if (new Set(normalized).size !== normalized.length) return false;
+
+        return true;
+      })
   })
   .test("is-future-datetime", function (values) {
     if (!values?.date || !values?.time) return true;
@@ -75,5 +96,26 @@ export const eventApiSchema = yup.object({
   visibility: yup
     .mixed<EventVisibility.PUBLIC | EventVisibility.PRIVATE>()
     .oneOf([EventVisibility.PUBLIC, EventVisibility.PRIVATE])
-    .required()
+    .required(),
+  tags: yup
+    .array()
+    .optional()
+    .max(5, "Maximum 5 tags allowed")
+    .test("tags-validation", "Tags are invalid", (tags) => {
+      if (!tags) return true;
+
+      for (const tag of tags) {
+        const trimmed = tag.trim();
+        if (!trimmed) return false;
+
+        if (!/[a-zA-Z]/.test(trimmed)) return false;
+
+        if (!/^[a-zA-Z0-9.-]+$/.test(trimmed)) return false;
+      }
+
+      const normalized = tags.map((tag) => tag.trim().toLowerCase());
+      if (new Set(normalized).size !== normalized.length) return false;
+
+      return true;
+    })
 });

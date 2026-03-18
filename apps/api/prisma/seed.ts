@@ -1,117 +1,144 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { EventVisibility, PrismaClient } from 'generated/prisma/client';
 import { Pool } from 'pg';
+import argon2 from 'argon2';
+
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const DEFAULT_PASSWORD = 'password';
 
 const connectionString = `${process.env.DATABASE_URL}`;
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
+async function clearDatabase() {
+  await prisma.participant.deleteMany({});
+  await prisma.event.deleteMany({});
+  await prisma.tag.deleteMany({});
+  await prisma.user.deleteMany({});
+
+  console.log('All data cleared!');
+}
+
 async function main() {
-  const alice = await prisma.user.create({
-    data: {
-      name: 'Alice Johnson',
-      email: 'alice@example.com',
-      password: 'password123',
-    },
-  });
+  await clearDatabase();
+  const userData = [
+    { name: 'Alice Johnson', email: 'alice@example.com' },
+    { name: 'Bob Smith', email: 'bob@example.com' },
+    { name: 'Charlie Brown', email: 'charlie@example.com' },
+  ];
 
-  const bob = await prisma.user.create({
-    data: {
-      name: 'Bob Smith',
-      email: 'bob@example.com',
-      password: 'password123',
-    },
-  });
+  const users = await Promise.all(
+    userData.map(async (u) => {
+      const hashedPassword = await argon2.hash(DEFAULT_PASSWORD);
+      return prisma.user.create({
+        data: {
+          ...u,
+          password: hashedPassword,
+        },
+      });
+    }),
+  );
 
-  const charlie = await prisma.user.create({
-    data: {
-      name: 'Charlie Brown',
-      email: 'charlie@example.com',
-      password: 'password123',
-    },
-  });
+  const tagNames = ['tech', 'cooking', 'fitness', 'wellness', 'business'];
 
-  const event1 = await prisma.event.create({
-    data: {
+  const tags = await Promise.all(
+    tagNames.map((name) =>
+      prisma.tag.create({
+        data: { name },
+      }),
+    ),
+  );
+
+  const eventData = [
+    {
       title: 'Node.js Workshop',
       description: 'Learn Node.js from scratch!',
-      dateTime: new Date('2026-04-01T10:00:00Z'),
       location: 'Online',
       capacity: 50,
       visibility: EventVisibility.PUBLIC,
-      organizerId: alice.id,
     },
-  });
-
-  const event2 = await prisma.event.create({
-    data: {
-      title: 'Private Cooking Class',
-      description: 'Exclusive cooking event for selected guests.',
-      dateTime: new Date('2026-04-05T15:00:00Z'),
-      location: '123 Culinary St, Foodtown',
-      capacity: 10,
+    {
+      title: 'Cooking Masterclass',
+      description: 'Cook like a pro!',
+      location: 'Culinary Studio',
+      capacity: 15,
       visibility: EventVisibility.PRIVATE,
-      organizerId: bob.id,
     },
-  });
-
-  const dave = await prisma.user.create({
-    data: {
-      name: 'Dave Wilson',
-      email: 'dave@example.com',
-      password: 'password123',
-    },
-  });
-
-  const emma = await prisma.user.create({
-    data: {
-      name: 'Emma Davis',
-      email: 'emma@example.com',
-      password: 'password123',
-    },
-  });
-
-  const event3 = await prisma.event.create({
-    data: {
+    {
       title: 'React Bootcamp',
-      description: 'Intensive React training for developers.',
-      dateTime: new Date('2026-04-10T09:00:00Z'),
+      description: 'Advanced React training.',
       location: 'Online',
       capacity: 30,
       visibility: EventVisibility.PUBLIC,
-      organizerId: charlie.id,
     },
-  });
-
-  const event4 = await prisma.event.create({
-    data: {
+    {
       title: 'Yoga Retreat',
-      description: 'Weekend retreat for relaxation and mindfulness.',
-      dateTime: new Date('2026-04-12T08:00:00Z'),
-      location: 'Peaceful Valley, Wellness Town',
+      description: 'Relax and recharge.',
+      location: 'Mountain Resort',
       capacity: 20,
       visibility: EventVisibility.PRIVATE,
-      organizerId: emma.id,
     },
-  });
+    {
+      title: 'Startup Meetup',
+      description: 'Networking for entrepreneurs.',
+      location: 'City Hub',
+      capacity: 100,
+      visibility: EventVisibility.PUBLIC,
+    },
+  ];
+
+  const events = await Promise.all(
+    eventData.map((event, i) =>
+      prisma.event.create({
+        data: {
+          ...event,
+          dateTime: new Date(Date.now() + (i + 1) * ONE_DAY_MS),
+          organizerId: users[i % users.length].id,
+
+          tags: {
+            connect: [
+              { id: tags[i % tags.length].id },
+              { id: tags[(i + 1) % tags.length].id },
+            ],
+          },
+        },
+      }),
+    ),
+  );
+
+  const participantsData: { userId: string; eventId: string }[] = [];
+
+  for (const event of events) {
+    const shuffledUsers = [...users].sort(() => Math.random() - 0.5);
+
+    participantsData.push({
+      userId: event.organizerId,
+      eventId: event.id,
+    });
+
+    const otherUsers = shuffledUsers.filter((u) => u.id !== event.organizerId);
+
+    const extraCount = Math.floor(Math.random() * otherUsers.length);
+
+    const selectedUsers = otherUsers.slice(0, extraCount);
+
+    for (const user of selectedUsers) {
+      participantsData.push({
+        userId: user.id,
+        eventId: event.id,
+      });
+    }
+  }
+
+  const uniqueParticipants = Array.from(
+    new Map(
+      participantsData.map((p) => [`${p.userId}-${p.eventId}`, p]),
+    ).values(),
+  );
 
   await prisma.participant.createMany({
-    data: [
-      { userId: alice.id, eventId: event3.id },
-      { userId: bob.id, eventId: event3.id },
-      { userId: dave.id, eventId: event3.id },
-      { userId: charlie.id, eventId: event4.id },
-      { userId: dave.id, eventId: event4.id },
-    ],
-  });
-
-  await prisma.participant.createMany({
-    data: [
-      { userId: bob.id, eventId: event1.id },
-      { userId: charlie.id, eventId: event1.id },
-      { userId: alice.id, eventId: event2.id },
-    ],
+    data: uniqueParticipants,
   });
 
   console.log('Database seeded successfully!');

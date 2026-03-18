@@ -1,8 +1,12 @@
 {
   "extends": "@ems-fullstack/typescript-config/base",
   "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "src",
+    "esModuleInterop": true,
+    "incremental": false,
     "outDir": "dist",
-    "rootDir": "src"
+    "strictNullChecks": true
   },
   "include": ["src"],
   "experimentalDecorators": true,

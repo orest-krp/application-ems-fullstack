@@ -51,7 +51,7 @@ export function ErrorState({ error }: ErrorStateProps) {
         <EmptyTitle className="text-destructive text-4xl">
           {error.statusCode}
         </EmptyTitle>
-        <EmptyDescription className="text-lg">
+        <EmptyDescription className="text-md">
           {error.messages.map((msg, idx) => (
             <p key={idx}>{msg}</p>
           ))}

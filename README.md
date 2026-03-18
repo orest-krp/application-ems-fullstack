@@ -1,5 +1,15 @@
 # 🚀 EMS — Event Management System
 
+🌐 **Live Demo:** https://application-ems-client.onrender.com
+**API: Visit if site is not loading. Hosting can be shut down because of innactivity** https://application-ems-api.onrender.com/events
+
+**Test credentials:**
+
+email: test@example.com
+password: Password_123
+
+---
+
 A **full-stack Employee Management System (EMS)** built with **NestJS** for the backend and **React + Vite** for the frontend in a **Turborepo monorepo** architecture.  
 The application uses **PostgreSQL** as the primary database and runs easily with **Docker & Docker Compose**.
 
@@ -79,12 +89,14 @@ PORT=8000
 FRONTEND_URL=http://localhost:5173
 DATABASE_URL=postgresql://myuser:mypassword@db:5432/db?schema=public
 
-JWT_ACCESS_SECRET=token_txH01KHrSLBaQuEwTC8k67fa6DiAmF7S
-JWT_REFRESH_SECRET=token_LAQff8fYAbJ5V8iCyw5xcZmQHNSXr3rb
+JWT_ACCESS_SECRET=secret_key
+JWT_REFRESH_SECRET=secret_key
 JWT_ACCESS_EXPIRATION_TIME=5m
 JWT_REFRESH_EXPIRATION_TIME=7d
 
-JWT_INVITATION=token_W28T0IV5Qeiq3jdeBZsR22vBlmdCB3fd
+JWT_INVITATION=secret_key
+
+GROQ_API_KEY=secret_key
 ```
 
 ## 🐳 Running the Application with Docker

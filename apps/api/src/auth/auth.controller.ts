@@ -13,15 +13,15 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth.quard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { setTokens } from 'src/utils/helpers';
-import { YupValidationPipe } from 'src/validation.pipe';
+import { deleteTokens, setTokens } from 'src/utils/helpers';
+import { YupValidationPipe } from 'src/utils/validation.pipe';
 import { type AuthReq, registerUserShema } from '@ems-fullstack/utils';
 import {
   LogOutResponseDto,
   RegisterUserDto,
   TokensResponseDto,
-} from 'src/dto/auth.dto';
-import { UserResponseDto } from 'src/dto/event.dto';
+} from 'src/utils/dto/auth.dto';
+import { UserResponseDto } from 'src/utils/dto/users.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -55,8 +55,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response): LogOutResponseDto {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    deleteTokens(res);
     return { message: 'Logged out successfully' };
   }
 
