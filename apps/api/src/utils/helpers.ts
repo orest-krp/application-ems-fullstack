@@ -23,3 +23,19 @@ export function setTokens(
     path: '/',
   });
 }
+
+export function deleteTokens(res: Response) {
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    path: '/',
+  });
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    path: '/',
+  });
+}
