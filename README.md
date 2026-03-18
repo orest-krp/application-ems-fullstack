@@ -1,7 +1,12 @@
 # 🚀 EMS — Event Management System
 
-🌐 **Live Demo:** https://application-ems-fullstack.onrender.com
+🌐 **Live Demo:** https://application-ems-client.onrender.com
 **API: Visit if site is not loading. Hosting can be shut down because of innactivity** https://application-ems-api.onrender.com/events
+
+**Test credentials:**
+
+email: test@example.com
+password: Password_123
 
 ---
 
