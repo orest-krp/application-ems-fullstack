@@ -14,6 +14,7 @@ export function setTokens(
     secure: true,
     sameSite: 'none',
     path: '/',
+    partitioned: true,
   });
 
   res.cookie('refreshToken', refreshToken, {
@@ -21,6 +22,7 @@ export function setTokens(
     secure: true,
     sameSite: 'none',
     path: '/',
+    partitioned: true,
   });
 }
 
@@ -30,6 +32,7 @@ export function deleteTokens(res: Response) {
     secure: true,
     sameSite: 'none',
     path: '/',
+    partitioned: true,
   });
 
   res.clearCookie('refreshToken', {
@@ -37,5 +40,6 @@ export function deleteTokens(res: Response) {
     secure: true,
     sameSite: 'none',
     path: '/',
+    partitioned: true,
   });
 }
