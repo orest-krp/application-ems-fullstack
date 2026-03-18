@@ -7,10 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "push": "prisma db push",
-    "seed": "prisma db seed",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
+    "push": "prisma db push",
+    "seed": "prisma db seed",
     "dev": "nest start --watch",
     "debug": "nest start --debug --watch",
     "prod": "node dist/main",
@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@ems-fullstack/utils": "workspace:*",
+    "@ems-fullstack/eslint-config": "workspace:*",
+    "@ems-fullstack/typescript-config": "workspace:*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.2",
