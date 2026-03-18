@@ -1,5 +1,10 @@
 # 🚀 EMS — Event Management System
 
+🌐 **Live Demo:** https://application-ems-fullstack.onrender.com
+**API: Visit if site is not loading. Hosting can be shut down because of innactivity** https://application-ems-api.onrender.com/events
+
+---
+
 A **full-stack Employee Management System (EMS)** built with **NestJS** for the backend and **React + Vite** for the frontend in a **Turborepo monorepo** architecture.  
 The application uses **PostgreSQL** as the primary database and runs easily with **Docker & Docker Compose**.
 

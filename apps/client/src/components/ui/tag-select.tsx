@@ -108,7 +108,7 @@ export function TagsSelect({
                 )}
                 <ComboboxChipsInput
                   onChange={(e) => setSearch(e.target.value)}
-                  className={clsx(isIcon && "pl-6", className)}
+                  className={clsx(isIcon && "pl-6", "w-full", className)}
                   placeholder="Search for tags..."
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && e.currentTarget.value.trim()) {

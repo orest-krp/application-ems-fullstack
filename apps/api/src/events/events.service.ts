@@ -21,7 +21,6 @@ export class EventsService {
 
   private prepareTagQuery(tags: string[]) {
     return {
-      set: [],
       connectOrCreate: tags.map((tag) => ({
         where: { name: tag.toLowerCase() },
         create: { name: tag.toLowerCase() },

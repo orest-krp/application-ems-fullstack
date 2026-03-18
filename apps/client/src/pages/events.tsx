@@ -27,7 +27,7 @@ export function Events() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="container h-full pb-4 flex flex-col gap-4 pt-6">
+    <div className="h-full pb-4 w-full flex flex-col gap-4 pt-6">
       <PageHeader
         title="Discover Events"
         subtitle="Find and join exciting events happening around you"
