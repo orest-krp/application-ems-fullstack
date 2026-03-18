@@ -14,7 +14,7 @@ RUN pnpm install
 
 WORKDIR /app/apps/api
 
-RUN npx prisma generate
+RUN prisma generate
 
 WORKDIR /app/apps
 

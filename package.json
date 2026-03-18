@@ -6,7 +6,7 @@
     "dev": "turbo run dev",
     "build:client": "turbo run build --filter=client",
     "build:api": "turbo run build --filter=api",
-    "start:api": "node apps/api/dist/main.js",
+    "start:api": "node apps/api/dist/src/main.js",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
