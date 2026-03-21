@@ -11,6 +11,7 @@ password: Password_123
 ---
 
 A **full-stack Event Management System (EMS)** built with **NestJS** for the backend and **React + Vite** for the frontend in a **Turborepo monorepo** architecture.  
+
 The application uses **PostgreSQL** as the primary database and runs easily with **Docker & Docker Compose**.
 
 ---
